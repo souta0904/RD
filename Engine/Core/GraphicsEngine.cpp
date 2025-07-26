@@ -46,22 +46,22 @@ void DirectXCore::Initialize(Window* window)
 	CreateSwapChain(window);
 	CreateDescriptorHeaps();
 	CreateRtv();
-	CreateDsv();
+	CreateDsv(window);
 	CreateFence();
 	InitializeDxc();
 
 	// ビューポートとシザー矩形
 	mViewport.TopLeftX = 0.0f;
 	mViewport.TopLeftY = 0.0f;
-	mViewport.Width = FLOAT(Window::kWidth);
-	mViewport.Height = FLOAT(Window::kHeight);
+	mViewport.Width = FLOAT(window->GetWidth());
+	mViewport.Height = FLOAT(window->GetHeight());
 	mViewport.MinDepth = 0.0f;
 	mViewport.MaxDepth = 1.0f;
 
 	mScissor.left = 0;
 	mScissor.top = 0;
-	mScissor.right = Window::kWidth;
-	mScissor.bottom = Window::kHeight;
+	mScissor.right = window->GetWidth();
+	mScissor.bottom = window->GetHeight();
 }
 
 void DirectXCore::Terminate()
@@ -155,8 +155,8 @@ Microsoft::WRL::ComPtr<IDxcBlob> DirectXCore::CompileShader(
 	const std::string& filePath, const std::string& profile)
 {
 	// ワイド文字へ変換
-	std::wstring wFilePath = Helper::ConvertToWstr(filePath);
-	std::wstring wProfile = Helper::ConvertToWstr(profile);
+	std::wstring wFilePath = Helper::ConvertString(filePath);
+	std::wstring wProfile = Helper::ConvertString(profile);
 
 	// ファイルを読み込む
 	Microsoft::WRL::ComPtr<IDxcBlobEncoding> blobEncoding = nullptr;
@@ -310,8 +310,8 @@ void DirectXCore::CreateCommand()
 void DirectXCore::CreateSwapChain(Window* window)
 {
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
-	desc.Width = Window::kWidth;
-	desc.Height = Window::kHeight;
+	desc.Width = window->GetWidth();
+	desc.Height = window->GetHeight();
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.SampleDesc.Count = 1;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -351,12 +351,12 @@ void DirectXCore::CreateRtv()
 }
 
 // 深度ステンシルビュー
-void DirectXCore::CreateDsv()
+void DirectXCore::CreateDsv(Window* window)
 {
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	desc.Width = Window::kWidth;
-	desc.Height = Window::kHeight;
+	desc.Width = window->GetWidth();
+	desc.Height = window->GetHeight();
 	desc.DepthOrArraySize = 1;
 	desc.Format = DXGI_FORMAT_D32_FLOAT;
 	desc.SampleDesc.Count = 1;

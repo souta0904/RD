@@ -9,6 +9,6 @@
 #else
 #define MY_ASSERT(expression) (void)(\
             (!!(expression)) ||\
-            (_wassert(_CRT_WIDE(#expression), Helper::ConvertToWstr(Helper::ExtractFileName(__FILE__)).c_str(), (unsigned)(__LINE__)), 0)\
+            (_wassert(_CRT_WIDE(#expression), Helper::ConvertString(Helper::ExtractFileName(__FILE__)).c_str(), (unsigned)(__LINE__)), 0)\
         )
 #endif

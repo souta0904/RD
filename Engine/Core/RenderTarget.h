@@ -10,7 +10,7 @@ class RenderTarget
 public:
 	RenderTarget();
 	~RenderTarget();
-	void Create(uint32_t width = Window::kWidth, uint32_t height = Window::kHeight);
+	void Create(uint32_t width = 1920, uint32_t height = 1080);
 	// レンダリング前後処理
 	void PreRender(ID3D12GraphicsCommandList* cmdList);
 	void PostRender();

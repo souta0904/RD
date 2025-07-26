@@ -134,10 +134,11 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 			auto actor = scene->GetActorForDev();
 			if (actor)
 			{
+				auto window = gEngine->GetWindow();
 
 				ImGui::Image(
 					ImTextureID(texture->GetDescHandle()->mGpuHandle.ptr),
-					ImVec2(size.x, Window::kHeight * size.x / Window::kWidth));
+					ImVec2(size.x, window->GetHeight() * size.x / window->GetWidth()));
 				// モデルのドラッグアンドドロップでメッシュレンダラー付のアクターを作成
 				if (ImGui::BeginDragDropTarget())
 				{
@@ -162,7 +163,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 					//ImGuizmo::SetRect(min.x, min.y, w, h);
 					//float windowWidth = (float)ImGui::GetWindowWidth();
 					//float windowHeight = (float)ImGui::GetWindowHeight();
-					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, Window::kHeight * size.x / Window::kWidth);
+					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, window->GetHeight() * size.x / window->GetWidth());
 					//float viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
 					//float viewManipulateTop = ImGui::GetWindowPos().y;
 					/*ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -288,17 +289,19 @@ void Renderer::RenderFinalRT(ID3D12GraphicsCommandList* cmdList)
 	}
 	else
 	{
+		auto window = gEngine->GetWindow();
+
 		SpriteCommon::PreRendering(cmdList);
 		// ビューポートをセットし直す
 		D3D12_VIEWPORT viewport = {};
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		viewport.Width = FLOAT(Window::kWidth);
-		viewport.Height = FLOAT(Window::kHeight);
+		viewport.Width = FLOAT(window->GetWidth());
+		viewport.Height = FLOAT(window->GetHeight());
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		cmdList->RSSetViewports(1, &viewport);
-		mFinalSprite->Draw(Vector2(float(Window::kWidth), float(Window::kHeight)));
+		mFinalSprite->Draw(Vector2(float(window->GetWidth()), float(window->GetHeight())));
 		SpriteCommon::PostRendering();
 		Editor::Draw(cmdList);
 	}

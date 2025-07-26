@@ -4,7 +4,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// TODO: ここからウィンドウサイズとウィンドウタイトルを設定
 	gEngine = std::make_unique<Engine>();
-	gEngine->Run();
+	gEngine->Run(1920, 1080, "RD Galaxy");
 
 	return 0;
 }

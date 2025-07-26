@@ -10,7 +10,7 @@ namespace Helper
 	}
 
 	// マルチバイト文字をワイド文字へ変換
-	std::wstring ConvertToWstr(const std::string& str)
+	std::wstring ConvertString(const std::string& str)
 	{
 		if (str.empty())
 		{

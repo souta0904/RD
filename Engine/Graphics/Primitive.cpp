@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Core/GraphicsCommon.h"
 #include "Matrix3.h"
+#include "RdEngine.h"
 #include "Renderer.h"
 #include "Window.h"
 
@@ -57,9 +58,10 @@ void Primitive::Initialize(Renderer* renderer)
 	mVBuff = std::make_unique<VertexBuffer>();
 	mVBuff->Create(sizeof(Vertex) * kMaxVertex, sizeof(Vertex));
 	// 定数バッファ
+	auto window = gEngine->GetWindow();
 	mCBuff2 = std::make_unique<ConstantBuffer>();
 	Matrix4 initData = Matrix4::CreateOrthographic(
-		0.0f, 0.0f, float(Window::kWidth), float(Window::kHeight), 0.0f, 100.0f);
+		0.0f, 0.0f, float(window->GetWidth()), float(window->GetHeight()), 0.0f, 100.0f);
 	mCBuff2->Create(sizeof(Matrix4), &initData);
 	mCBuff3 = std::make_unique<ConstantBuffer>();
 	mCBuff3->Create(sizeof(Matrix4));

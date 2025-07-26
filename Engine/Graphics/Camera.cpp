@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "RdEngine.h"
 #include "Window.h"
 
 Camera::Camera()
@@ -23,7 +24,8 @@ void Camera::UpdateViewProj()
 	mView = rotate * translate;
 	mView = Inverse(mView);
 	// Projection
-	mProj = Matrix4::CreatePerspectiveFov(mFov, float(Window::kWidth) / float(Window::kHeight), mNearZ, mFarZ);
+	auto window = gEngine->GetWindow();
+	mProj = Matrix4::CreatePerspectiveFov(mFov, float(window->GetWidth()) / float(window->GetHeight()), mNearZ, mFarZ);
 	// View Projection
 	mViewProj = mView * mProj;
 	// Billboard

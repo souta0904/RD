@@ -3,6 +3,7 @@
 #include "Helper/MyAssert.h"
 #include "Graphics/Renderer.h"
 #include "Sprite.h"
+#include "RdEngine.h"
 #include "Window.h"
 
 ID3D12GraphicsCommandList* SpriteCommon::mCmdList = nullptr;
@@ -59,9 +60,10 @@ void SpriteCommon::Initialize(Renderer* renderer)
 		p.Create();
 	}
 
+	auto window = gEngine->GetWindow();
 	// プロジェクション行列
 	mProjMat = Matrix4::CreateOrthographic(
-		0.0f, 0.0f, float(Window::kWidth), float(Window::kHeight), 0.0f, 100.0f);
+		0.0f, 0.0f, float(window->GetWidth()), float(window->GetHeight()), 0.0f, 100.0f);
 }
 
 // レンダリング前

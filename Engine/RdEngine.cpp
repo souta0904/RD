@@ -15,9 +15,9 @@ namespace
 const std::string Engine::kName = "RD ENGINE";
 const std::string Engine::kVersion = "0.1.0";
 
-void Engine::Run()
+void Engine::Run(uint32_t width, uint32_t height, const std::string& appName)
 {
-	Initialize();
+	Initialize(width, height, appName);
 
 	// メインループ
 	while (!mWindow->ProcessMessage())
@@ -36,16 +36,22 @@ void Engine::Run()
 }
 
 // 初期化
-void Engine::Initialize()
+void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appName)
 {
+	mAppName = appName;
+
 	Console::Log(std::format("{} v.{}\n", kName, kVersion));
 
 	[[maybe_unused]] HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 	assert(SUCCEEDED(hr));
 
+	std::string title = appName;
+#ifdef _DEBUG
+	title += std::format(" - {} v.{}", kName, kVersion);
+#endif
 	// TODO: 成功チェック
 	mWindow = std::make_shared<Window>();
-	mWindow->Initialize();
+	mWindow->Initialize(width, height, title);
 
 	gDirectXCore = std::make_shared<DirectXCore>();
 	gDirectXCore->Initialize(mWindow.get());
@@ -141,7 +147,6 @@ void Engine::Input()
 	mInput->Update();
 
 	const InputSystem::State& inputState = mInput->GetState();
-
 	Editor::Input(inputState);
 	if (Editor::IsGamePlaying())
 	{

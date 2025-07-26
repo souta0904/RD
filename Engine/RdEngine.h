@@ -13,7 +13,7 @@ class Engine
 {
 public:
 	// 実行
-	void Run();
+	void Run(uint32_t width = 1920, uint32_t height = 1080, const std::string& appName = "AppName");
 
 	// shared_ptrからunique_ptrへ
 	std::shared_ptr<Window> GetWindow() const { return mWindow; }
@@ -24,7 +24,7 @@ public:
 	std::shared_ptr<SceneManager> GetSceneMgr() const { return mSceneMgr; }
 
 private:
-	void Initialize();
+	void Initialize(uint32_t width, uint32_t height, const std::string& appName);
 	void Terminate();
 
 	// ゲームループ用ヘルパー関数
@@ -37,6 +37,7 @@ public:
 	static const std::string kVersion;// バージョン
 private:
 	bool mIsRunning = true;
+	std::string mAppName;
 	// shared_ptrからunique_ptrへ
 	std::shared_ptr<Window> mWindow;
 	std::shared_ptr<Renderer> mRenderer;

@@ -28,7 +28,7 @@ bool Texture::Create(const std::string& filePath)
 {
 	mFilePath = filePath;
 	// ワイド文字へ変換
-	std::wstring wFilePath = Helper::ConvertToWstr(filePath);
+	std::wstring wFilePath = Helper::ConvertString(filePath);
 
 	// ファイルを読み込む
 	DirectX::ScratchImage scratchImage = {};

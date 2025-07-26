@@ -1,63 +1,42 @@
 #include "Window.h"
 #include "Helper/Helper.h"
 #include "RdEngine.h"
-#include <ImGui/imgui_impl_win32.h>
+#include <ImGui/imgui_impl_win32.h>// TODO: ImGuiをimguiへ
 
-// ウィンドウの幅
-const uint32_t Window::kWidth = 1280;
-// ウィンドウの高さ
-const uint32_t Window::kHeight = 720;
-
-// ImGuiのウィンドウプロシージャ
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
-	HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-// ウィンドウプロシージャ
-LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+bool Window::Initialize(uint32_t width, uint32_t height, const std::string& title)
 {
-	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-	{
-		return true;
-	}
-	switch (msg)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	}
-	return DefWindowProc(hWnd, msg, wParam, lParam);
-}
+	mWidth = width;
+	mHeight = height;
 
-void Window::Initialize()
-{
-	// タイトル
-	mTitle = std::format(
-		"{} Ver.{}.{}.{}\n",
-		Engine::kName,
-		Engine::kVersion[0],
-		Engine::kVersion[1],
-		Engine::kVersion[2]);
-	//mTitle = "Galaxy";
-
-	// インスタンスハンドルを取得
+	// インスタンスハンドルの取得
 	mHInst = GetModuleHandle(nullptr);
-	// ウィンドウクラスを設定
+	if (!mHInst)
+	{
+		return false;
+	}
+
+	// ウィンドウクラスの設定
 	WNDCLASSEX wc = {};
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.lpfnWndProc = WndProc;
 	wc.hInstance = mHInst;
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wc.lpszClassName = L"RdWndClass";
-	RegisterClassEx(&wc);
-	// クライアント領域のサイズからウィンドウのサイズを計算
-	RECT rc = { 0,0,kWidth,kHeight };
+	wc.lpszClassName = L"RdWindowClass";
+	// ウィンドウクラスを登録
+	if (!RegisterClassEx(&wc))
+	{
+		return false;
+	}
+
+	// クライアントサイズからウィンドウサイズを計算
+	RECT rc = { 0,0,static_cast<LONG>(mWidth),static_cast<LONG>(mHeight) };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
 
-	auto title = Helper::ConvertToWstr(mTitle);
+	std::wstring wtitle = Helper::ConvertString(title);
 	// ウィンドウを作成
 	mHWnd = CreateWindow(
 		wc.lpszClassName,
-		title.c_str(),
+		wtitle.c_str(),
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
@@ -66,9 +45,16 @@ void Window::Initialize()
 		nullptr,
 		nullptr,
 		mHInst,
-		nullptr);
-	// ウィンドウを表示
+		nullptr
+	);
+	if (!mHWnd)
+	{
+		return false;
+	}
+
 	ShowWindow(mHWnd, SW_SHOW);
+
+	return true;
 }
 
 void Window::Terminate()
@@ -76,7 +62,6 @@ void Window::Terminate()
 	CloseWindow(mHWnd);
 }
 
-// メッセージを処理
 bool Window::ProcessMessage()
 {
 	MSG msg = {};
@@ -87,14 +72,29 @@ bool Window::ProcessMessage()
 	}
 	if (msg.message == WM_QUIT)
 	{
+		// ゲームループ終了
 		return true;
 	}
 	return false;
 }
 
-void Window::SetTitle(const std::string& title)
+// ImGuiのウィンドウプロシージャの前方宣言
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+// ウィンドウプロシージャ
+LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
-	mTitle = title;
-	auto t = Helper::ConvertToWstr(mTitle);
-	SetWindowText(mHWnd, t.c_str());
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wp, lp))
+	{
+		return true;
+	}
+
+	switch (msg)
+	{
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	return DefWindowProc(hWnd, msg, wp, lp);
 }

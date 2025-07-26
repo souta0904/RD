@@ -1,4 +1,5 @@
 #include "GaussianBlur.h"
+#include "RdEngine.h"
 #include "Core/GraphicsCommon.h"
 #include "Sprite/SpriteCommon.h"
 #include "Renderer.h"
@@ -47,10 +48,11 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	mVBlurPso.SetVertexShader(vBlurVs);
 	mVBlurPso.Create();
 
+	auto window = gEngine->GetWindow();
 	// 縮小バッファ
-	mHBlurRt.Create(Window::kWidth / 2, Window::kHeight);
+	mHBlurRt.Create(window->GetWidth() / 2, window->GetHeight());
 	mHBlurSprite.Create(mTexture);
-	mVBlurRt.Create(Window::kWidth / 2, Window::kHeight / 2);
+	mVBlurRt.Create(window->GetWidth() / 2, window->GetHeight() / 2);
 	mVBlurSprite.Create(mHBlurRt.GetRenderTarget().get());
 
 	mCBuff = std::make_unique<ConstantBuffer>();
@@ -75,25 +77,26 @@ void GaussianBlur::Execute(ID3D12GraphicsCommandList* cmdList, float power)
 	mBlurRs->Bind(cmdList);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	// 横ブラー
+	auto window = gEngine->GetWindow();
 	mHBlurRt.PreRender(cmdList);
 	D3D12_VIEWPORT viewport;
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = FLOAT(Window::kWidth) / 2.0f;
-	viewport.Height = FLOAT(Window::kHeight);
+	viewport.Width = FLOAT(window->GetWidth()) / 2.0f;
+	viewport.Height = FLOAT(window->GetHeight());
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	cmdList->RSSetViewports(1, &viewport);
 	mHBlurPso.Bind(cmdList);
 	mCBuff->Bind(cmdList, 2);
-	mHBlurSprite.Draw(Vector2(float(Window::kWidth), float(Window::kHeight)));
+	mHBlurSprite.Draw(Vector2(float(window->GetWidth()), float(window->GetHeight())));
 	mHBlurRt.PostRender();
 	// 縦ブラー
 	mVBlurRt.PreRender(cmdList);
-	viewport.Height = FLOAT(Window::kHeight) / 2.0f;
+	viewport.Height = FLOAT(window->GetHeight()) / 2.0f;
 	cmdList->RSSetViewports(1, &viewport);
 	mVBlurPso.Bind(cmdList);
 	mCBuff->Bind(cmdList, 2);
-	mVBlurSprite.Draw(Vector2(float(Window::kWidth), float(Window::kHeight)));
+	mVBlurSprite.Draw(Vector2(float(window->GetWidth()), float(window->GetHeight())));
 	mVBlurRt.PostRender();
 }

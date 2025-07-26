@@ -3,36 +3,33 @@
 #include <string>
 #include <Windows.h>
 
-// TODO: フルスクリーン
-// TODO: 解像度
+// TODO: フルスクリーン化
+// TODO: 解像度変更
 
 // ウィンドウ
 class Window
 {
 public:
-	// ウィンドウプロシージャ
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-	void Initialize();
+	bool Initialize(uint32_t width, uint32_t height, const std::string& title);
 	void Terminate();
+
 	// メッセージを処理
+	// 戻り値がtrueでゲームループ終了
 	bool ProcessMessage();
 
-	// タイトルを変更
-	void SetTitle(const std::string& title);
-
-	// アクセッサ
+	uint32_t GetWidth() const { return mWidth; }
+	uint32_t GetHeight() const { return mHeight; }
 	HINSTANCE GetHInst() const { return mHInst; }
 	HWND GetHWnd() const { return mHWnd; }
 
-public:
-	// ウィンドウの幅
-	static const uint32_t kWidth;
-	// ウィンドウの高さ
-	static const uint32_t kHeight;
 private:
-	// タイトルバーの文字
-	std::string mTitle;
+	// ウィンドウプロシージャ
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp);
+
+private:
+	// ウィンドウサイズ
+	uint32_t mWidth;
+	uint32_t mHeight;
 	// インスタンスハンドル
 	HINSTANCE mHInst;
 	// ウィンドウハンドル

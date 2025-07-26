@@ -8,7 +8,7 @@ namespace Helper
 	void WriteToOutputWindow(const std::string& str);
 
 	// 文字列を変換
-	std::wstring ConvertToWstr(const std::string& str);
+	std::wstring ConvertString(const std::string& str);
 	std::string ConvertToStr(const std::wstring& wstr);
 
 	// ファイルパスからファイル名を抽出

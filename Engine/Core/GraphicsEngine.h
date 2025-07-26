@@ -47,7 +47,7 @@ private:
 	void CreateSwapChain(Window* window);
 	void CreateDescriptorHeaps();
 	void CreateRtv();
-	void CreateDsv();
+	void CreateDsv(Window* window);
 	void CreateFence();
 	void InitializeDxc();
 

@@ -1,4 +1,5 @@
 #include "DebugCamera.h"
+#include "RdEngine.h"
 #include "Window.h"
 #include "MyMath.h"
 
@@ -20,8 +21,9 @@ void DebugCamera::Input(const InputSystem::State& input)
 	// 回転
 	if (input.mMouse.GetButton(1))// 右クリック
 	{
-		mRotVel.x = move.y / Window::kWidth * kRotSpeed;
-		mRotVel.y = move.x / Window::kHeight * kRotSpeed;
+		auto window = gEngine->GetWindow();
+		mRotVel.x = move.y / window->GetWidth() * kRotSpeed;
+		mRotVel.y = move.x / window->GetHeight() * kRotSpeed;
 	}
 	// 平行移動
 	if (input.mMouse.GetButton(2))// 中ボタン
