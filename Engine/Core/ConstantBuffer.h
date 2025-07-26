@@ -3,14 +3,19 @@
 #include <d3d12.h>
 #include <wrl.h>
 
+// TODO: デスクリプタヒープに対応
+
+// 定数バッファ
 class ConstantBuffer
 {
-public:
-	ConstantBuffer();
-	void Create(uint32_t size, void* initData = nullptr);
-	void Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam);
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	// VRAMへコピー
+public:
+	bool Create(uint32_t size, void* initData = nullptr);
+	void Bind(ComPtr<ID3D12GraphicsCommandList> cmdList, uint32_t rootParamIdx);
+
+	// バッファを更新
 	void Copy(void* data);
 	template <typename T>
 	void Copy(T& data)
@@ -18,11 +23,12 @@ public:
 		Copy(&data);
 	}
 
+	// TODO: 仮想アドレスは隠ぺい
 	void* GetData() const { return mData; }
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> mBuff;
 	uint32_t mSize;
-	// データへのポインタ
-	void* mData;
+	uint32_t mAlignedSize;// 256アライメントされたサイズ
+	ComPtr<ID3D12Resource> mBuff;
+	void* mData;// 仮想アドレス
 };

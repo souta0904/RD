@@ -79,7 +79,7 @@ void DirectXCore::Terminate()
 // SRV用ヒープをバインド
 void DirectXCore::BindHeapSRV()
 {
-	ID3D12DescriptorHeap* descHeaps[] = { mSrvHeap.GetHeap() };
+	ID3D12DescriptorHeap* descHeaps[] = { mSrvHeap.GetDescriptorHeap().Get() };
 	mCmdList->SetDescriptorHeaps(1, descHeaps);
 }
 
@@ -96,8 +96,8 @@ void DirectXCore::Begin()
 	mCmdList->ResourceBarrier(1, &barrier);
 
 	// レンダーターゲットをセット
-	auto& rtvHandle = mRtvHandles[mBackBuffIdx]->mCpuHandle;
-	auto& dsvHandle = mDsvHandle->mCpuHandle;
+	auto& rtvHandle = mRtvHandles[mBackBuffIdx]->mCPU;
+	auto& dsvHandle = mDsvHandle->mCPU;
 	mCmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 	// クリア
 	float clearColor[4] = { 0.0f,0.0f,1.0f,0.0f };
@@ -194,7 +194,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DirectXCore::CompileShader(
 	if (error && error->GetStringLength() != 0)
 	{
 		// エラーの出力
-		Helper::WriteToOutputWindow(error->GetStringPointer());
+		Helper::Log(error->GetStringPointer());
 		return nullptr;
 	}
 
@@ -239,7 +239,7 @@ void DirectXCore::CreateDevice()
 			// ソフトウェアアダプタはダメ
 			if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE))
 			{
-				Helper::WriteToOutputWindow(
+				Helper::Log(
 					Helper::ConvertToStr(std::format(L"Use adapter: {}\n", desc.Description)));
 				break;
 			}
@@ -260,7 +260,7 @@ void DirectXCore::CreateDevice()
 		hr = D3D12CreateDevice(adapter.Get(), featureLevels[i], IID_PPV_ARGS(&mDevice));
 		if (SUCCEEDED(hr))
 		{
-			Helper::WriteToOutputWindow(std::format("Feature level: {}\n", str[i]));
+			Helper::Log(std::format("Feature level: {}\n", str[i]));
 			break;
 		}
 	}
@@ -288,7 +288,7 @@ void DirectXCore::CreateDevice()
 	}
 #endif
 
-	GraphicsCommon::Initialize();
+	DirectXCommonSettings::Initialize();
 }
 
 // コマンド
@@ -346,7 +346,7 @@ void DirectXCore::CreateRtv()
 		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-		mDevice->CreateRenderTargetView(mBackBuffs[i].Get(), &rtvDesc, mRtvHandles[i]->mCpuHandle);
+		mDevice->CreateRenderTargetView(mBackBuffs[i].Get(), &rtvDesc, mRtvHandles[i]->mCPU);
 	}
 }
 
@@ -366,7 +366,7 @@ void DirectXCore::CreateDsv(Window* window)
 	clearVal.DepthStencil.Depth = 1.0f;
 	// 深度バッファを作成
 	[[maybe_unused]] HRESULT hr = mDevice->CreateCommittedResource(
-		&GraphicsCommon::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
+		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
 		IID_PPV_ARGS(&mDepthBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 
@@ -376,7 +376,7 @@ void DirectXCore::CreateDsv(Window* window)
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	mDevice->CreateDepthStencilView(mDepthBuff.Get(), &dsvDesc, mDsvHandle->mCpuHandle);
+	mDevice->CreateDepthStencilView(mDepthBuff.Get(), &dsvDesc, mDsvHandle->mCPU);
 }
 
 // フェンス

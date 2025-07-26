@@ -4,7 +4,7 @@
 namespace Helper
 {
 	// 出力ウィンドウへ出力
-	void WriteToOutputWindow(const std::string& str)
+	void Log(const std::string& str)
 	{
 		OutputDebugStringA(str.c_str());
 	}

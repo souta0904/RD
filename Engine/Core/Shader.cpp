@@ -36,13 +36,13 @@ bool Shader::CheckResult()
 {
 	if (mBlob)
 	{
-		Helper::WriteToOutputWindow(
+		Helper::Log(
 			std::format("Success: Compile \"{}\"\n", mFilePath));
 		return true;
 	}
 	else
 	{
-		Helper::WriteToOutputWindow(
+		Helper::Log(
 			std::format("Failure: Compile \"{}\"\n", mFilePath));
 		return false;
 	}

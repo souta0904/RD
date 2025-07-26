@@ -17,7 +17,7 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	mBlurRs->RootParameters(1).InitDescriptorTable(1);
 	mBlurRs->RootParameters(1).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 	mBlurRs->RootParameters(2).InitConstant(1);
-	mBlurRs->Samplers(0) = GraphicsCommon::gSamplerLinearClamp;
+	mBlurRs->Samplers(0) = DirectXCommonSettings::gSamplerLinearClamp;
 	mBlurRs->Create();
 
 	// シェーダ
@@ -29,9 +29,9 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	mHBlurPso.SetRootSignature(mBlurRs.get());
 	mHBlurPso.SetVertexShader(hBlurVs);
 	mHBlurPso.SetPixelShader(ps);
-	mHBlurPso.SetBlendState(GraphicsCommon::gBlendNormal);
-	mHBlurPso.SetRasterizerState(GraphicsCommon::gRasterizerCullModeNone);
-	mHBlurPso.SetDepthStencilState(GraphicsCommon::gDepthDisable);
+	mHBlurPso.SetBlendState(DirectXCommonSettings::gBlendNormal);
+	mHBlurPso.SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
+	mHBlurPso.SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
 	D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;

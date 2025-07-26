@@ -137,7 +137,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 				auto window = gEngine->GetWindow();
 
 				ImGui::Image(
-					ImTextureID(texture->GetDescHandle()->mGpuHandle.ptr),
+					ImTextureID(texture->GetDescHandle()->mGPU.ptr),
 					ImVec2(size.x, window->GetHeight() * size.x / window->GetWidth()));
 				// モデルのドラッグアンドドロップでメッシュレンダラー付のアクターを作成
 				if (ImGui::BeginDragDropTarget())
@@ -207,7 +207,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 }
 
 // シーン描画
-void Renderer::RenderScene(ID3D12GraphicsCommandList* cmdList)
+void Renderer::RenderSceneTmp(ID3D12GraphicsCommandList* cmdList)
 {
 	// ==================================================
 	// 前処理
@@ -638,7 +638,7 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)t->GetDescHandle()->mGpuHandle.ptr, ImVec2(40.0f, 40.0f));
+			ImGui::Image((void*)(intptr_t)t->GetDescHandle()->mGPU.ptr, ImVec2(40.0f, 40.0f));
 			auto texName = Helper::ExtractFileName(t->GetFilePath());
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
@@ -679,7 +679,7 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGpuHandle.ptr, size);
+			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGPU.ptr, size);
 			auto modelName = m->GetName();
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
@@ -727,7 +727,7 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGpuHandle.ptr, size);
+			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGPU.ptr, size);
 			auto animName = anim->GetName();
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
@@ -779,10 +779,10 @@ void Renderer::SetGameCamera(CameraComponent* camera)
 }
 
 
-void Renderer::Render(ID3D12GraphicsCommandList* cmdList)
+void Renderer::RenderScene(ID3D12GraphicsCommandList* cmdList)
 {
 	PreRendering(cmdList);
-	RenderScene(cmdList);
+	RenderSceneTmp(cmdList);
 	if (Editor::IsEditor())
 	{
 		RenderDebug(cmdList);

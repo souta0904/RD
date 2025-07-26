@@ -15,7 +15,7 @@ void Primitive::Initialize(Renderer* renderer)
 	//mRootSignature.Initialize(1, 1);
 	mRootSignature = std::make_unique<RootSignature>(1, 1);
 	mRootSignature->RootParameters(0).InitConstant(0);
-	mRootSignature->Samplers(0) = GraphicsCommon::gSamplerLinearWrap;
+	mRootSignature->Samplers(0) = DirectXCommonSettings::gSamplerLinearWrap;
 	mRootSignature->Create();
 
 	// シェーダ
@@ -25,9 +25,9 @@ void Primitive::Initialize(Renderer* renderer)
 	mLinePso2.SetRootSignature(mRootSignature.get());
 	mLinePso2.SetVertexShader(vs);
 	mLinePso2.SetPixelShader(ps);
-	mLinePso2.SetBlendState(GraphicsCommon::gBlendNormal);
-	mLinePso2.SetRasterizerState(GraphicsCommon::gRasterizerCullModeNone);
-	mLinePso2.SetDepthStencilState(GraphicsCommon::gDepthDisable);
+	mLinePso2.SetBlendState(DirectXCommonSettings::gBlendNormal);
+	mLinePso2.SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
+	mLinePso2.SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
 	D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
@@ -51,7 +51,7 @@ void Primitive::Initialize(Renderer* renderer)
 	mPrimPso3.Create();
 
 	mGridPso = mLinePso3;
-	mGridPso.SetDepthStencilState(GraphicsCommon::gDepthEnable);
+	mGridPso.SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
 	mGridPso.Create();
 
 	// 頂点バッファ

@@ -21,7 +21,7 @@ void SpriteCommon::Initialize(Renderer* renderer)
 	mRootSignature->RootParameters(0).InitConstant(0);
 	mRootSignature->RootParameters(1).InitDescriptorTable(1);
 	mRootSignature->RootParameters(1).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-	mRootSignature->Samplers(0) = GraphicsCommon::gSamplerLinearClamp;
+	mRootSignature->Samplers(0) = DirectXCommonSettings::gSamplerLinearClamp;
 	mRootSignature->Create();
 
 	// シェーダ
@@ -31,9 +31,9 @@ void SpriteCommon::Initialize(Renderer* renderer)
 	mPipelineStates[uint32_t(Blend::None)].SetRootSignature(mRootSignature.get());
 	mPipelineStates[uint32_t(Blend::None)].SetVertexShader(vs);
 	mPipelineStates[uint32_t(Blend::None)].SetPixelShader(ps);
-	mPipelineStates[uint32_t(Blend::None)].SetBlendState(GraphicsCommon::gBlendNone);
-	mPipelineStates[uint32_t(Blend::None)].SetRasterizerState(GraphicsCommon::gRasterizerCullModeNone);
-	mPipelineStates[uint32_t(Blend::None)].SetDepthStencilState(GraphicsCommon::gDepthDisable);
+	mPipelineStates[uint32_t(Blend::None)].SetBlendState(DirectXCommonSettings::gBlendNone);
+	mPipelineStates[uint32_t(Blend::None)].SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
+	mPipelineStates[uint32_t(Blend::None)].SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
 	D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
@@ -46,15 +46,15 @@ void SpriteCommon::Initialize(Renderer* renderer)
 	mPipelineStates[uint32_t(Blend::None)].SetInputLayout(_countof(inputLayouts), inputLayouts);
 
 	mPipelineStates[uint32_t(Blend::Normal)] = mPipelineStates[uint32_t(Blend::None)];
-	mPipelineStates[uint32_t(Blend::Normal)].SetBlendState(GraphicsCommon::gBlendNormal);
+	mPipelineStates[uint32_t(Blend::Normal)].SetBlendState(DirectXCommonSettings::gBlendNormal);
 	mPipelineStates[uint32_t(Blend::Add)] = mPipelineStates[uint32_t(Blend::None)];
-	mPipelineStates[uint32_t(Blend::Add)].SetBlendState(GraphicsCommon::gBlendAddition);
+	mPipelineStates[uint32_t(Blend::Add)].SetBlendState(DirectXCommonSettings::gBlendAddition);
 	mPipelineStates[uint32_t(Blend::Subtract)] = mPipelineStates[uint32_t(Blend::None)];
-	mPipelineStates[uint32_t(Blend::Subtract)].SetBlendState(GraphicsCommon::gBlendSubtract);
+	mPipelineStates[uint32_t(Blend::Subtract)].SetBlendState(DirectXCommonSettings::gBlendSubtract);
 	mPipelineStates[uint32_t(Blend::Multiply)] = mPipelineStates[uint32_t(Blend::None)];
-	mPipelineStates[uint32_t(Blend::Multiply)].SetBlendState(GraphicsCommon::gBlendMultiply);
+	mPipelineStates[uint32_t(Blend::Multiply)].SetBlendState(DirectXCommonSettings::gBlendMultiply);
 	mPipelineStates[uint32_t(Blend::Screen)] = mPipelineStates[uint32_t(Blend::None)];
-	mPipelineStates[uint32_t(Blend::Screen)].SetBlendState(GraphicsCommon::gBlendScreen);
+	mPipelineStates[uint32_t(Blend::Screen)].SetBlendState(DirectXCommonSettings::gBlendScreen);
 	for (auto& p : mPipelineStates)
 	{
 		p.Create();

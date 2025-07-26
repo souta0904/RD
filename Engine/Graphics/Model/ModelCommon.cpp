@@ -29,7 +29,7 @@ void ModelCommon::Initialize(Renderer* renderer)
 	mRootSignature->RootParameters(4).InitConstant(3);
 	mRootSignature->RootParameters(5).InitDescriptorTable(1);
 	mRootSignature->RootParameters(5).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
-	mRootSignature->Samplers(0) = GraphicsCommon::gSamplerLinearWrap;
+	mRootSignature->Samplers(0) = DirectXCommonSettings::gSamplerLinearWrap;
 	mRootSignature->Create();
 
 	// シェーダ
@@ -41,9 +41,9 @@ void ModelCommon::Initialize(Renderer* renderer)
 	mPsos[uint32_t(Type::Default)].SetRootSignature(mRootSignature.get());
 	mPsos[uint32_t(Type::Default)].SetVertexShader(defaultVs);
 	mPsos[uint32_t(Type::Default)].SetPixelShader(defaultPs);
-	mPsos[uint32_t(Type::Default)].SetBlendState(GraphicsCommon::gBlendNormal);
-	mPsos[uint32_t(Type::Default)].SetRasterizerState(GraphicsCommon::gRasterizerDefault);
-	mPsos[uint32_t(Type::Default)].SetDepthStencilState(GraphicsCommon::gDepthEnable);
+	mPsos[uint32_t(Type::Default)].SetBlendState(DirectXCommonSettings::gBlendNormal);
+	mPsos[uint32_t(Type::Default)].SetRasterizerState(DirectXCommonSettings::gRasterizerDefault);
+	mPsos[uint32_t(Type::Default)].SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
 	D3D12_INPUT_ELEMENT_DESC inputLayouts[3] = {};
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
@@ -62,7 +62,7 @@ void ModelCommon::Initialize(Renderer* renderer)
 	mPsos[uint32_t(Type::Unlight)] = mPsos[uint32_t(Type::Default)];
 	mPsos[uint32_t(Type::Unlight)].SetPixelShader(unlightPs);
 	mPsos[uint32_t(Type::Wireframe)] = mPsos[uint32_t(Type::Default)];
-	mPsos[uint32_t(Type::Wireframe)].SetRasterizerState(GraphicsCommon::gRasterizerFillModeWireframe);
+	mPsos[uint32_t(Type::Wireframe)].SetRasterizerState(DirectXCommonSettings::gRasterizerFillModeWireframe);
 	for (auto& p : mPsos)
 	{
 		p.Create();
@@ -72,9 +72,9 @@ void ModelCommon::Initialize(Renderer* renderer)
 	mSkinnedPsos[uint32_t(Type::Default)].SetRootSignature(mRootSignature.get());
 	mSkinnedPsos[uint32_t(Type::Default)].SetVertexShader(skinnedVs);
 	mSkinnedPsos[uint32_t(Type::Default)].SetPixelShader(defaultPs);
-	mSkinnedPsos[uint32_t(Type::Default)].SetBlendState(GraphicsCommon::gBlendNormal);
-	mSkinnedPsos[uint32_t(Type::Default)].SetRasterizerState(GraphicsCommon::gRasterizerDefault);
-	mSkinnedPsos[uint32_t(Type::Default)].SetDepthStencilState(GraphicsCommon::gDepthEnable);
+	mSkinnedPsos[uint32_t(Type::Default)].SetBlendState(DirectXCommonSettings::gBlendNormal);
+	mSkinnedPsos[uint32_t(Type::Default)].SetRasterizerState(DirectXCommonSettings::gRasterizerDefault);
+	mSkinnedPsos[uint32_t(Type::Default)].SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
 	D3D12_INPUT_ELEMENT_DESC skinnedInputLayouts[5] = {};
 	skinnedInputLayouts[0].SemanticName = "POSITION";
 	skinnedInputLayouts[0].SemanticIndex = 0;
@@ -103,7 +103,7 @@ void ModelCommon::Initialize(Renderer* renderer)
 	mSkinnedPsos[uint32_t(Type::Unlight)] = mSkinnedPsos[uint32_t(Type::Default)];
 	mSkinnedPsos[uint32_t(Type::Unlight)].SetPixelShader(unlightPs);
 	mSkinnedPsos[uint32_t(Type::Wireframe)] = mSkinnedPsos[uint32_t(Type::Default)];
-	mSkinnedPsos[uint32_t(Type::Wireframe)].SetRasterizerState(GraphicsCommon::gRasterizerFillModeWireframe);
+	mSkinnedPsos[uint32_t(Type::Wireframe)].SetRasterizerState(DirectXCommonSettings::gRasterizerFillModeWireframe);
 	for (auto& p : mSkinnedPsos)
 	{
 		p.Create();

@@ -66,7 +66,7 @@ namespace Editor
 		auto handle = srvHeap.Alloc();
 		if (!ImGui_ImplDX12_Init(
 			gDirectXCore->GetDevice(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-			srvHeap.GetHeap(), handle->mCpuHandle, handle->mGpuHandle))
+			srvHeap.GetDescriptorHeap().Get(), handle->mCPU, handle->mGPU))
 		{
 			MY_ASSERT(false);
 		}
@@ -309,21 +309,21 @@ namespace Editor
 		switch (Editor::gEditorState)
 		{
 		case Editor::EditorState::kEdit:
-			if (ImGui::ImageButton((void*)(intptr_t)mStartTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStartTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kPlay;
 				sceneManager->InitActor();
 				mIsDebugCamera = false;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mPauseTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mPauseTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kStop;
 				sceneManager->InitActor();
 				mIsDebugCamera = false;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kStep;
 				sceneManager->InitActor();
@@ -331,37 +331,37 @@ namespace Editor
 			}
 			break;
 		case Editor::EditorState::kPlay:
-			if (ImGui::ImageButton((void*)(intptr_t)mStopTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStopTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kEdit;
 				sceneManager->Reset();
 				mIsDebugCamera = true;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mPauseTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mPauseTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kStop;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kStep;
 			}
 			break;
 		case Editor::EditorState::kStop:
-			if (ImGui::ImageButton((void*)(intptr_t)mStopTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStopTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kEdit;
 				sceneManager->Reset();
 				mIsDebugCamera = true;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mStartTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStartTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kPlay;
 			}
 			ImGui::SameLine();
-			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGpuHandle.ptr, ImVec2(24.0f, 24.0f)))
+			if (ImGui::ImageButton((void*)(intptr_t)mStepTex->GetDescHandle()->mGPU.ptr, ImVec2(24.0f, 24.0f)))
 			{
 				Editor::gEditorState = Editor::EditorState::kStep;
 			}

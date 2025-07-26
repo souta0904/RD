@@ -23,7 +23,7 @@ void VertexBuffer::Create(uint32_t size, uint32_t stride, void* initData)
 	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 頂点バッファを作成
 	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
-		&GraphicsCommon::gHeapUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		&DirectXCommonSettings::gHeapPropUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&mBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 

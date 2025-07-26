@@ -35,7 +35,7 @@ void StructuredBuffer::Create(uint32_t size, uint32_t elemCount, void* initData)
 	// 構造化バッファを作成
 	auto device = gDirectXCore->GetDevice();
 	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
-		&GraphicsCommon::gHeapUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		&DirectXCommonSettings::gHeapPropUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&mBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 
@@ -57,13 +57,13 @@ void StructuredBuffer::Create(uint32_t size, uint32_t elemCount, void* initData)
 	srvDesc.Buffer.NumElements = mElemCount;
 	srvDesc.Buffer.StructureByteStride = mSize;
 	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	device->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCpuHandle);
+	device->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCPU);
 }
 
 void StructuredBuffer::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam)
 {
 	MY_ASSERT(cmdList);
-	cmdList->SetGraphicsRootDescriptorTable(rootParam, mDescHandle->mGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(rootParam, mDescHandle->mGPU);
 }
 
 void StructuredBuffer::Copy(void* data)

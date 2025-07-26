@@ -63,7 +63,7 @@ bool Texture::Create(const std::string& filePath)
 	auto device = gDirectXCore->GetDevice();
 	// テクスチャバッファを作成
 	hr = device->CreateCommittedResource(
-		&GraphicsCommon::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
 		IID_PPV_ARGS(&mBuff));
 	if (FAILED(hr))
 	{
@@ -83,7 +83,7 @@ bool Texture::Create(const std::string& filePath)
 	// 中間リソースを作成
 	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = nullptr;
 	hr = device->CreateCommittedResource(
-		&GraphicsCommon::gHeapUpload, D3D12_HEAP_FLAG_NONE, &intermediateDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		&DirectXCommonSettings::gHeapPropUpload, D3D12_HEAP_FLAG_NONE, &intermediateDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&intermediateResource));
 	if (FAILED(hr))
 	{
@@ -123,7 +123,7 @@ void Texture::CreateFromBuff(Microsoft::WRL::ComPtr<ID3D12Resource> buff)
 void Texture::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam)
 {
 	MY_ASSERT(cmdList);
-	cmdList->SetGraphicsRootDescriptorTable(rootParam, mDescHandle->mGpuHandle);
+	cmdList->SetGraphicsRootDescriptorTable(rootParam, mDescHandle->mGPU);
 }
 
 void Texture::CreateSrv(DXGI_FORMAT format, uint32_t mipLevels)
@@ -136,5 +136,5 @@ void Texture::CreateSrv(DXGI_FORMAT format, uint32_t mipLevels)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.Texture2D.MipLevels = mipLevels;
-	gDirectXCore->GetDevice()->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCpuHandle);
+	gDirectXCore->GetDevice()->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCPU);
 }

@@ -1,10 +1,10 @@
 #include "GraphicsCommon.h"
 
-namespace GraphicsCommon
+namespace DirectXCommonSettings
 {
 	// ヒーププロパティ
 	D3D12_HEAP_PROPERTIES gHeapDefault = {};
-	D3D12_HEAP_PROPERTIES gHeapUpload = {};
+	D3D12_HEAP_PROPERTIES gHeapPropUpload = {};
 	// ブレンド
 	D3D12_BLEND_DESC gBlendNone = {};
 	D3D12_BLEND_DESC gBlendNormal = {};
@@ -25,11 +25,11 @@ namespace GraphicsCommon
 	D3D12_STATIC_SAMPLER_DESC gSamplerLinearClamp = {};
 }
 
-void GraphicsCommon::Initialize()
+void DirectXCommonSettings::Initialize()
 {
 	// ヒーププロパティ
 	gHeapDefault.Type = D3D12_HEAP_TYPE_DEFAULT;
-	gHeapUpload.Type = D3D12_HEAP_TYPE_UPLOAD;
+	gHeapPropUpload.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	// ブレンド
 	gBlendNone.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;

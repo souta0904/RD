@@ -1,11 +1,11 @@
 #pragma once
 #include <d3d12.h>
 
-namespace GraphicsCommon
+namespace DirectXCommonSettings
 {
 	// ヒーププロパティ
 	extern D3D12_HEAP_PROPERTIES gHeapDefault;
-	extern D3D12_HEAP_PROPERTIES gHeapUpload;
+	extern D3D12_HEAP_PROPERTIES gHeapPropUpload;
 	// ブレンド
 	extern D3D12_BLEND_DESC gBlendNone;
 	extern D3D12_BLEND_DESC gBlendNormal;

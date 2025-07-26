@@ -39,8 +39,10 @@ void Engine::Run(uint32_t width, uint32_t height, const std::string& appName)
 void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appName)
 {
 	mAppName = appName;
-
+	Helper::Log(std::format("{} v.{}\n", kName, kVersion));
+	Helper::Log(std::format("AppName: {}\n", mAppName));
 	Console::Log(std::format("{} v.{}\n", kName, kVersion));
+	Console::Log(std::format("AppName: {}\n", mAppName));
 
 	[[maybe_unused]] HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 	assert(SUCCEEDED(hr));
@@ -49,10 +51,13 @@ void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appN
 #ifdef _DEBUG
 	title += std::format(" - {} v.{}", kName, kVersion);
 #endif
-	// TODO: 成功チェック
 	mWindow = std::make_shared<Window>();
-	mWindow->Initialize(width, height, title);
+	if (!mWindow->Initialize(width, height, title))
+	{
+		Helper::Log("Failed to initialize window.\n");
+	}
 
+	// TODO: 成功チェック
 	gDirectXCore = std::make_shared<DirectXCore>();
 	gDirectXCore->Initialize(mWindow.get());
 
@@ -157,10 +162,9 @@ void Engine::Input()
 // 更新処理
 void Engine::Update()
 {
-	const float kDeltaTime = 1.0f / 60.0f;
-
 	Editor::ShowEditor(this);
 
+	const float kDeltaTime = 1.0f / 60.0f;
 	Editor::Update(kDeltaTime);
 	if (Editor::IsGamePlaying())
 	{
@@ -180,7 +184,7 @@ void Engine::Render()
 
 	// シーンを描画
 	auto cmdList = gDirectXCore->GetCmdList();
-	mRenderer->Render(cmdList);
+	mRenderer->RenderScene(cmdList);
 
 	// エディタここまで
 	Editor::End();

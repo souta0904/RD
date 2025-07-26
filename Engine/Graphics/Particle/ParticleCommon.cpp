@@ -27,7 +27,7 @@ void ParticleCommon::Initialize(Renderer* renderer)
 	mRootSignature->RootParameters(3).InitDescriptorTable(1);
 	mRootSignature->RootParameters(3).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
 	mRootSignature->RootParameters(4).InitConstant(3);
-	mRootSignature->Samplers(0) = GraphicsCommon::gSamplerLinearWrap;
+	mRootSignature->Samplers(0) = DirectXCommonSettings::gSamplerLinearWrap;
 	mRootSignature->Create();
 
 	// シェーダ
@@ -38,9 +38,9 @@ void ParticleCommon::Initialize(Renderer* renderer)
 	mPsos[uint32_t(Blend::None)].SetRootSignature(mRootSignature.get());
 	mPsos[uint32_t(Blend::None)].SetVertexShader(vs);
 	mPsos[uint32_t(Blend::None)].SetPixelShader(unlightPs);
-	mPsos[uint32_t(Blend::None)].SetBlendState(GraphicsCommon::gBlendNone);
-	mPsos[uint32_t(Blend::None)].SetRasterizerState(GraphicsCommon::gRasterizerCullModeNone);
-	mPsos[uint32_t(Blend::None)].SetDepthStencilState(GraphicsCommon::gDepthWriteMaskZero);
+	mPsos[uint32_t(Blend::None)].SetBlendState(DirectXCommonSettings::gBlendNone);
+	mPsos[uint32_t(Blend::None)].SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
+	mPsos[uint32_t(Blend::None)].SetDepthStencilState(DirectXCommonSettings::gDepthWriteMaskZero);
 	D3D12_INPUT_ELEMENT_DESC inputLayouts[3] = {};
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
@@ -57,15 +57,15 @@ void ParticleCommon::Initialize(Renderer* renderer)
 	mPsos[uint32_t(Blend::None)].SetInputLayout(_countof(inputLayouts), inputLayouts);
 
 	mPsos[uint32_t(Blend::Normal)] = mPsos[uint32_t(Blend::None)];
-	mPsos[uint32_t(Blend::Normal)].SetBlendState(GraphicsCommon::gBlendNormal);
+	mPsos[uint32_t(Blend::Normal)].SetBlendState(DirectXCommonSettings::gBlendNormal);
 	mPsos[uint32_t(Blend::Add)] = mPsos[uint32_t(Blend::None)];
-	mPsos[uint32_t(Blend::Add)].SetBlendState(GraphicsCommon::gBlendAddition);
+	mPsos[uint32_t(Blend::Add)].SetBlendState(DirectXCommonSettings::gBlendAddition);
 	mPsos[uint32_t(Blend::Subtract)] = mPsos[uint32_t(Blend::None)];
-	mPsos[uint32_t(Blend::Subtract)].SetBlendState(GraphicsCommon::gBlendSubtract);
+	mPsos[uint32_t(Blend::Subtract)].SetBlendState(DirectXCommonSettings::gBlendSubtract);
 	mPsos[uint32_t(Blend::Multiply)] = mPsos[uint32_t(Blend::None)];
-	mPsos[uint32_t(Blend::Multiply)].SetBlendState(GraphicsCommon::gBlendMultiply);
+	mPsos[uint32_t(Blend::Multiply)].SetBlendState(DirectXCommonSettings::gBlendMultiply);
 	mPsos[uint32_t(Blend::Screen)] = mPsos[uint32_t(Blend::None)];
-	mPsos[uint32_t(Blend::Screen)].SetBlendState(GraphicsCommon::gBlendScreen);
+	mPsos[uint32_t(Blend::Screen)].SetBlendState(DirectXCommonSettings::gBlendScreen);
 	for (auto& p : mPsos)
 	{
 		p.Create();
@@ -74,12 +74,12 @@ void ParticleCommon::Initialize(Renderer* renderer)
 	// メッシュパーティクル用
 	mModelPsos[uint32_t(ModelCommon::Type::Default)] = mPsos[uint32_t(Blend::None)];
 	mModelPsos[uint32_t(ModelCommon::Type::Default)].SetPixelShader(defaultPs);
-	mModelPsos[uint32_t(ModelCommon::Type::Default)].SetBlendState(GraphicsCommon::gBlendNormal);
-	mModelPsos[uint32_t(ModelCommon::Type::Default)].SetDepthStencilState(GraphicsCommon::gDepthEnable);
+	mModelPsos[uint32_t(ModelCommon::Type::Default)].SetBlendState(DirectXCommonSettings::gBlendNormal);
+	mModelPsos[uint32_t(ModelCommon::Type::Default)].SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
 	mModelPsos[uint32_t(ModelCommon::Type::Unlight)] = mModelPsos[uint32_t(ModelCommon::Type::Default)];
 	mModelPsos[uint32_t(ModelCommon::Type::Unlight)].SetPixelShader(unlightPs);
 	mModelPsos[uint32_t(ModelCommon::Type::Wireframe)] = mModelPsos[uint32_t(ModelCommon::Type::Default)];
-	mModelPsos[uint32_t(ModelCommon::Type::Wireframe)].SetRasterizerState(GraphicsCommon::gRasterizerFillModeWireframe);
+	mModelPsos[uint32_t(ModelCommon::Type::Wireframe)].SetRasterizerState(DirectXCommonSettings::gRasterizerFillModeWireframe);
 	for (auto& p : mModelPsos)
 	{
 		p.Create();

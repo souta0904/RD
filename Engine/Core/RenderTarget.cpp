@@ -40,7 +40,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
 	auto device = gDirectXCore->GetDevice();
 	[[maybe_unused]] HRESULT hr = device->CreateCommittedResource(
-		&GraphicsCommon::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearVal,
+		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearVal,
 		IID_PPV_ARGS(&texBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 	// テクスチャを作成
@@ -53,7 +53,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	clearVal.DepthStencil.Depth = 1.0f;
 	// 深度バッファを作成
 	hr = device->CreateCommittedResource(
-		&GraphicsCommon::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
+		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
 		IID_PPV_ARGS(&mDepthBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 
@@ -64,12 +64,12 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	device->CreateRenderTargetView(texBuff.Get(), &rtvDesc, mRtvHandle->mCpuHandle);
+	device->CreateRenderTargetView(texBuff.Get(), &rtvDesc, mRtvHandle->mCPU);
 	// 深度ステンシルビューを作成
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	device->CreateDepthStencilView(mDepthBuff.Get(), &dsvDesc, mDsvHandle->mCpuHandle);
+	device->CreateDepthStencilView(mDepthBuff.Get(), &dsvDesc, mDsvHandle->mCPU);
 
 	// ビューポートとシザー矩形
 	mViewport.TopLeftX = 0.0f;
@@ -99,8 +99,8 @@ void RenderTarget::PreRender(ID3D12GraphicsCommandList* cmdList)
 	mCmdList->ResourceBarrier(1, &barrier);
 
 	// レンダーターゲットをセット
-	auto& rtvHandle = mRtvHandle->mCpuHandle;
-	auto& dsvHandle = mDsvHandle->mCpuHandle;
+	auto& rtvHandle = mRtvHandle->mCPU;
+	auto& dsvHandle = mDsvHandle->mCPU;
 	mCmdList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 	// クリア
 	mCmdList->ClearRenderTargetView(rtvHandle, &mClearColor.r, 0, nullptr);

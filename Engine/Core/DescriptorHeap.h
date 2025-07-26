@@ -1,34 +1,30 @@
 #pragma once
+#include "DescriptorHandle.h"
 #include "Helper/Pool.h"
 #include <d3d12.h>
 #include <wrl.h>
 
-struct DescriptorHandle
-{
-	// CPUデスクリプタハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE mCpuHandle;
-	// GPUデスクリプタハンドル
-	D3D12_GPU_DESCRIPTOR_HANDLE mGpuHandle;
-};
-
+// デスクリプタヒープ
 class DescriptorHeap
 {
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 public:
-	DescriptorHeap();
+	bool Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors, bool isShaderVisible);
+	void Bind(ComPtr<ID3D12GraphicsCommandList> cmdList);
 
-	void Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescs, bool isShaderVisible);
-	// デスクリプタハンドルを割り当て
+	// デスクリプタハンドル割り当て
 	DescriptorHandle* Alloc();
-	// デスクリプタハンドルを解放
-	void Free(DescriptorHandle*& descHandle);
+	// デスクリプタハンドル解放
+	void Free(DescriptorHandle*& handle);
 
-	ID3D12DescriptorHeap* GetHeap() const { return mDescriptorHeap.Get(); }
+	ComPtr<ID3D12DescriptorHeap> GetDescriptorHeap() const { return mDescriptorHeap; }
+	Pool<DescriptorHandle>* GetHandlePool() const { return mHandlePool.get(); }
 
 private:
 	D3D12_DESCRIPTOR_HEAP_DESC mDesc;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDescriptorHeap;
-	// デスクリプタハンドル管理用
-	Pool<DescriptorHandle> mDescriptorPool;
-	// デスクリプタのインクリメントサイズ
+	ComPtr<ID3D12DescriptorHeap> mDescriptorHeap;
+	std::unique_ptr<Pool<DescriptorHandle>> mHandlePool;// ハンドル管理
 	uint32_t mIncrementSize;
 };

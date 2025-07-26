@@ -5,7 +5,7 @@
 namespace Helper
 {
 	// 出力ウィンドウへ出力
-	void WriteToOutputWindow(const std::string& str);
+	void Log(const std::string& str);
 
 	// 文字列を変換
 	std::wstring ConvertString(const std::string& str);
