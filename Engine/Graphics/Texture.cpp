@@ -21,7 +21,7 @@ Texture::Texture()
 Texture::~Texture()
 {
 	// デスクリプタハンドルを解放
-	gGraphicsEngine->GetSrvHeap().Free(mDescHandle);
+	gDirectXCore->GetSrvHeap().Free(mDescHandle);
 }
 
 bool Texture::Create(const std::string& filePath)
@@ -60,7 +60,7 @@ bool Texture::Create(const std::string& filePath)
 	desc.MipLevels = UINT16(metadata.mipLevels);
 	desc.Format = metadata.format;
 	desc.SampleDesc.Count = 1;
-	auto device = gGraphicsEngine->GetDevice();
+	auto device = gDirectXCore->GetDevice();
 	// テクスチャバッファを作成
 	hr = device->CreateCommittedResource(
 		&GraphicsCommon::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
@@ -91,7 +91,7 @@ bool Texture::Create(const std::string& filePath)
 	}
 
 	// テクスチャバッファへ転送
-	auto cmdList = gGraphicsEngine->GetCmdList();
+	auto cmdList = gDirectXCore->GetCmdList();
 	UpdateSubresources(
 		cmdList, mBuff.Get(), intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 	D3D12_RESOURCE_BARRIER barrier = {};
@@ -100,8 +100,8 @@ bool Texture::Create(const std::string& filePath)
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 	cmdList->ResourceBarrier(1, &barrier);
-	gGraphicsEngine->ExecuteCommand();
-	gGraphicsEngine->WaitGpu();
+	gDirectXCore->ExecuteCommand();
+	gDirectXCore->WaitGpu();
 
 	// シェーダリソースビューを作成
 	CreateSrv(DirectX::MakeSRGB(metadata.format), uint32_t(metadata.mipLevels));
@@ -129,12 +129,12 @@ void Texture::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam)
 void Texture::CreateSrv(DXGI_FORMAT format, uint32_t mipLevels)
 {
 	// デスクリプタハンドルを割り当て
-	mDescHandle = gGraphicsEngine->GetSrvHeap().Alloc();
+	mDescHandle = gDirectXCore->GetSrvHeap().Alloc();
 	// シェーダリソースビューを作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.Texture2D.MipLevels = mipLevels;
-	gGraphicsEngine->GetDevice()->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCpuHandle);
+	gDirectXCore->GetDevice()->CreateShaderResourceView(mBuff.Get(), &srvDesc, mDescHandle->mCpuHandle);
 }

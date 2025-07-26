@@ -23,7 +23,7 @@ void SceneManager::Terminate()
 	}
 }
 
-void SceneManager::TransNextScene()
+void SceneManager::TransitionScene()
 {
 	// 次のシーンへ
 	if (mNextScene)
@@ -45,7 +45,7 @@ void SceneManager::Input(const InputSystem::State& input)
 	}
 }
 
-void SceneManager::Update(float deltaTime)
+void SceneManager::UpdateForGame(float deltaTime)
 {
 	if (mCurrScene)
 	{
@@ -57,13 +57,17 @@ void SceneManager::Update(float deltaTime)
 	}
 }
 
-void SceneManager::UpdateWorld()
+void SceneManager::UpdateForEditor()
 {
-	if (mCurrScene)
-	{
-		mCurrScene->UpdateWorld();
-	}
+		if (mCurrScene)
+		{
+			mCurrScene->UpdateWorld();
+		}
 }
+
+//void SceneManager::UpdateWorldMat()
+//{
+//}
 
 void SceneManager::TestCollision()
 {

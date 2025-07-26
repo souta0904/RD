@@ -17,7 +17,7 @@ void DescriptorHeap::Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescs, 
 	mDesc.Type = type;
 	mDesc.NumDescriptors = numDescs;
 	mDesc.Flags = isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	auto device = gGraphicsEngine->GetDevice();
+	auto device = gDirectXCore->GetDevice();
 	[[maybe_unused]] HRESULT hr = device->CreateDescriptorHeap(&mDesc, IID_PPV_ARGS(&mDescriptorHeap));
 	MY_ASSERT(SUCCEEDED(hr));
 	// プールを初期化

@@ -128,7 +128,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 		//	ImGui::EndDragDropTarget();
 		//}
 
-		auto scene = gEngine->GetSceneManager()->GetCurrScene();
+		auto scene = gEngine->GetSceneMgr()->GetCurrScene();
 		if (scene)
 		{
 			auto actor = scene->GetActorForDev();
@@ -144,7 +144,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 					if (auto payload = ImGui::AcceptDragDropPayload("MODEL_PAYLOAD"))
 					{
 						auto model = *(Model**)(payload->Data);
-						auto actor2 = new Actor(gEngine->GetSceneManager()->GetCurrScene());
+						auto actor2 = new Actor(gEngine->GetSceneMgr()->GetCurrScene());
 						auto mr = new MeshRenderer(actor2);
 						mr->SetModel(model);
 						actor2->SetName(Helper::ExcludeExtension(model->GetName()));
@@ -278,7 +278,7 @@ void Renderer::RenderScene(ID3D12GraphicsCommandList* cmdList)
 	SpriteCommon::PostRendering();
 }
 
-void Renderer::RenderFinal(ID3D12GraphicsCommandList* cmdList)
+void Renderer::RenderFinalRT(ID3D12GraphicsCommandList* cmdList)
 {
 	if (Editor::IsEditor() &&
 		(Editor::gEditorState == Editor::EditorState::kEdit || !Editor::mIsMaximum))
@@ -752,7 +752,7 @@ void Renderer::RenderDebug(ID3D12GraphicsCommandList* cmdList)
 		Primitive* prim = GetPrimitive();
 		prim->PreRendering(cmdList);
 		mPrimitive->DrawGrid();
-		gEngine->GetSceneManager()->RenderForDev(prim);
+		gEngine->GetSceneMgr()->RenderForDev(prim);
 		prim->PostRendering();
 	}
 }

@@ -8,9 +8,9 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
-std::shared_ptr<GraphicsEngine> gGraphicsEngine = nullptr;
+std::shared_ptr<DirectXCore> gDirectXCore = nullptr;
 
-GraphicsEngine::GraphicsEngine()
+DirectXCore::DirectXCore()
 	: mFactory(nullptr)
 	, mDevice(nullptr)
 	, mCmdQueue(nullptr)
@@ -37,7 +37,7 @@ GraphicsEngine::GraphicsEngine()
 
 }
 
-void GraphicsEngine::Initialize(Window* window)
+void DirectXCore::Initialize(Window* window)
 {
 	MY_ASSERT(window);
 
@@ -64,7 +64,7 @@ void GraphicsEngine::Initialize(Window* window)
 	mScissor.bottom = Window::kHeight;
 }
 
-void GraphicsEngine::Terminate()
+void DirectXCore::Terminate()
 {
 	mRtvHeap.Free(mRtvHandles[0]);
 	mRtvHeap.Free(mRtvHandles[1]);
@@ -77,14 +77,14 @@ void GraphicsEngine::Terminate()
 }
 
 // SRV用ヒープをバインド
-void GraphicsEngine::SetSrvHeap()
+void DirectXCore::BindHeapSRV()
 {
 	ID3D12DescriptorHeap* descHeaps[] = { mSrvHeap.GetHeap() };
 	mCmdList->SetDescriptorHeaps(1, descHeaps);
 }
 
 // レンダリング前処理
-void GraphicsEngine::PreRender()
+void DirectXCore::Begin()
 {
 	mBackBuffIdx = mSwapChain->GetCurrentBackBufferIndex();
 
@@ -108,11 +108,11 @@ void GraphicsEngine::PreRender()
 	mCmdList->RSSetViewports(1, &mViewport);
 	mCmdList->RSSetScissorRects(1, &mScissor);
 
-	SetSrvHeap();
+	BindHeapSRV();
 }
 
 // レンダリング後処理
-void GraphicsEngine::PostRender()
+void DirectXCore::End()
 {
 	// レンダーターゲットから表示へ
 	D3D12_RESOURCE_BARRIER barrier = {};
@@ -127,7 +127,7 @@ void GraphicsEngine::PostRender()
 }
 
 // コマンドを実行
-void GraphicsEngine::ExecuteCommand()
+void DirectXCore::ExecuteCommand()
 {
 	mCmdList->Close();
 	ID3D12CommandList* cmdLists[] = { mCmdList.Get() };
@@ -135,7 +135,7 @@ void GraphicsEngine::ExecuteCommand()
 }
 
 // 実行の完了を待つ
-void GraphicsEngine::WaitGpu()
+void DirectXCore::WaitGpu()
 {
 	++mFenceVal;
 	mCmdQueue->Signal(mFence.Get(), mFenceVal);
@@ -151,7 +151,7 @@ void GraphicsEngine::WaitGpu()
 }
 
 // シェーダをコンパイル
-Microsoft::WRL::ComPtr<IDxcBlob> GraphicsEngine::CompileShader(
+Microsoft::WRL::ComPtr<IDxcBlob> DirectXCore::CompileShader(
 	const std::string& filePath, const std::string& profile)
 {
 	// ワイド文字へ変換
@@ -209,7 +209,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> GraphicsEngine::CompileShader(
 }
 
 // デバイス
-void GraphicsEngine::CreateDevice()
+void DirectXCore::CreateDevice()
 {
 #ifdef _DEBUG
 	// デバッグレイヤーを有効にする
@@ -292,7 +292,7 @@ void GraphicsEngine::CreateDevice()
 }
 
 // コマンド
-void GraphicsEngine::CreateCommand()
+void DirectXCore::CreateCommand()
 {
 	D3D12_COMMAND_QUEUE_DESC desc = {};
 	// コマンドキューを作成
@@ -307,7 +307,7 @@ void GraphicsEngine::CreateCommand()
 }
 
 // スワップチェイン
-void GraphicsEngine::CreateSwapChain(Window* window)
+void DirectXCore::CreateSwapChain(Window* window)
 {
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
 	desc.Width = Window::kWidth;
@@ -324,7 +324,7 @@ void GraphicsEngine::CreateSwapChain(Window* window)
 }
 
 // デスクリプタヒープ
-void GraphicsEngine::CreateDescriptorHeaps()
+void DirectXCore::CreateDescriptorHeaps()
 {
 	mRtvHeap.Create(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 128, false);
 	mDsvHeap.Create(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 128, false);
@@ -332,7 +332,7 @@ void GraphicsEngine::CreateDescriptorHeaps()
 }
 
 // レンダーターゲットビュー
-void GraphicsEngine::CreateRtv()
+void DirectXCore::CreateRtv()
 {
 	for (uint32_t i = 0; i < 2; ++i)
 	{
@@ -351,7 +351,7 @@ void GraphicsEngine::CreateRtv()
 }
 
 // 深度ステンシルビュー
-void GraphicsEngine::CreateDsv()
+void DirectXCore::CreateDsv()
 {
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -380,7 +380,7 @@ void GraphicsEngine::CreateDsv()
 }
 
 // フェンス
-void GraphicsEngine::CreateFence()
+void DirectXCore::CreateFence()
 {
 	[[maybe_unused]] HRESULT hr = mDevice->CreateFence(mFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 	MY_ASSERT(SUCCEEDED(hr));
@@ -389,7 +389,7 @@ void GraphicsEngine::CreateFence()
 }
 
 // DirectX Shader Compiler
-void GraphicsEngine::InitializeDxc()
+void DirectXCore::InitializeDxc()
 {
 	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&mUtils));
 	MY_ASSERT(SUCCEEDED(hr));

@@ -10,20 +10,20 @@
 class Window;
 
 // DirectX
-class GraphicsEngine
+class DirectXCore
 {
 public:
-	GraphicsEngine();
+	DirectXCore();
 
 	void Initialize(Window* window);
 	void Terminate();
 
 	// SRV用ヒープをバインド
-	void SetSrvHeap();
+	void BindHeapSRV();
 
 	// レンダリング前後処理
-	void PreRender();
-	void PostRender();
+	void Begin();
+	void End();
 
 	// コマンドを実行
 	void ExecuteCommand();
@@ -79,4 +79,4 @@ private:
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> mIncludeHandler;
 };
 
-extern std::shared_ptr<GraphicsEngine> gGraphicsEngine;
+extern std::shared_ptr<DirectXCore> gDirectXCore;

@@ -62,10 +62,10 @@ namespace Editor
 		{
 			MY_ASSERT(false);
 		}
-		auto& srvHeap = gGraphicsEngine->GetSrvHeap();
+		auto& srvHeap = gDirectXCore->GetSrvHeap();
 		auto handle = srvHeap.Alloc();
 		if (!ImGui_ImplDX12_Init(
-			gGraphicsEngine->GetDevice(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+			gDirectXCore->GetDevice(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 			srvHeap.GetHeap(), handle->mCpuHandle, handle->mGpuHandle))
 		{
 			MY_ASSERT(false);
@@ -159,7 +159,7 @@ namespace Editor
 	}
 
 
-	void PreProcess()
+	void Begin()
 	{
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -167,7 +167,7 @@ namespace Editor
 		ImGuizmo::BeginFrame();
 	}
 
-	void PostProcess()
+	void End()
 	{
 		ImGui::Render();
 	}
@@ -264,35 +264,38 @@ namespace Editor
 		}
 	}
 
-	void ShowEditor(RdEngine* engine)
+	void ShowEditor(Engine* engine)
 	{
-		if (Editor::gEditorState == Editor::EditorState::kEdit || !Editor::mIsMaximum)//
+		if (Editor::IsEditor())
 		{
-			ImGui::Begin("Game", nullptr, ImGuiWindowFlags_NoMove);
-
-			ShowState(engine->GetRenderer().get(), engine->GetSceneManager().get());
-
-			// デバッグカメラ
-			//bool isDebugCamera = renderer->GetIsDebugCamera();
-			if (ImGui::Checkbox("Is Debug Camera", &mIsDebugCamera))
+			if (Editor::gEditorState == Editor::EditorState::kEdit || !Editor::mIsMaximum)//
 			{
-				//renderer->SetIsDebugCamera(isDebugCamera);
+				ImGui::Begin("Game", nullptr, ImGuiWindowFlags_NoMove);
+
+				ShowState(engine->GetRenderer().get(), engine->GetSceneMgr().get());
+
+				// デバッグカメラ
+				//bool isDebugCamera = renderer->GetIsDebugCamera();
+				if (ImGui::Checkbox("Is Debug Camera", &mIsDebugCamera))
+				{
+					//renderer->SetIsDebugCamera(isDebugCamera);
+				}
+				ImGui::Checkbox("Is Maximum", &mIsMaximum);
+
+				ImGui::End();
+
+				engine->GetRenderer()->UpdateForDev();
+				engine->GetSceneMgr()->UpdateForDev();
+
+
+				Console::ShowConsole();
 			}
-			ImGui::Checkbox("Is Maximum", &mIsMaximum);
-
-			ImGui::End();
-
-			engine->GetRenderer()->UpdateForDev();
-			engine->GetSceneManager()->UpdateForDev();
-
-
-			Console::ShowConsole();
-		}
-		else
-		{
-			ImGui::Begin("State");
-			Editor::ShowState(engine->GetRenderer().get(), engine->GetSceneManager().get());
-			ImGui::End();
+			else
+			{
+				ImGui::Begin("State");
+				Editor::ShowState(engine->GetRenderer().get(), engine->GetSceneMgr().get());
+				ImGui::End();
+			}
 		}
 	}
 

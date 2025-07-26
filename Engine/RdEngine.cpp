@@ -4,91 +4,123 @@
 #include "Loader/JsonLoader.h"
 #include "Random.h"
 
-std::unique_ptr<RdEngine> gEngine = nullptr;
+std::unique_ptr<Engine> gEngine = nullptr;
 
-// エンジン名
-const std::string RdEngine::kName = "RD ENGINE";
-// バージョン
-const uint32_t RdEngine::kVersion[3] = { 1,0,0 };
-
-RdEngine::RdEngine()
-	: mIsRunning(true)
-	, mInputSystem(nullptr)
-	, mRenderer(nullptr)
-	, mAudioSystem(nullptr)
-	, mCollisionManager(nullptr)
-	, mSceneManager(nullptr)
-	, mFilePath("Assets/Data/System.rd")
+namespace
 {
-
+	// エンジン初期化ファイルのパス
+	const std::string kEngineInitFilePath = "assets/EngineInit.json";
 }
 
-void RdEngine::Initialize()
+const std::string Engine::kName = "RD ENGINE";
+const std::string Engine::kVersion = "0.1.0";
+
+void Engine::Run()
 {
-	// エンジン名とバージョンをコンソールへ出力
-	Console::Log(std::format(
-		"{} Ver.{}.{}.{}\n", kName, kVersion[0], kVersion[1], kVersion[2]));
+	Initialize();
 
-	// COMを初期化
+	// メインループ
+	while (!mWindow->ProcessMessage())
+	{
+		if (!mIsRunning)
+		{
+			break;
+		}
+
+		Input();
+		Update();
+		Render();
+	}
+
+	Terminate();
+}
+
+// 初期化
+void Engine::Initialize()
+{
+	Console::Log(std::format("{} v.{}\n", kName, kVersion));
+
 	[[maybe_unused]] HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 
-	// インスタンスを作成
+	// TODO: 成功チェック
 	mWindow = std::make_shared<Window>();
-	gGraphicsEngine = std::make_shared<GraphicsEngine>();
-	mInputSystem = std::make_shared<InputSystem>();
-	mRenderer = std::make_shared<Renderer>();
-	mAudioSystem = std::make_shared<AudioSystem>();
-	mCollisionManager = std::make_shared<CollisionManager>();
-	mSceneManager = std::make_shared<SceneManager>();
-
-	// 初期化
 	mWindow->Initialize();
-	gGraphicsEngine->Initialize(mWindow.get());
-	mInputSystem->Initialize(mWindow.get());
+
+	gDirectXCore = std::make_shared<DirectXCore>();
+	gDirectXCore->Initialize(mWindow.get());
+
+	mRenderer = std::make_shared<Renderer>();
 	mRenderer->Initialize();
-	mAudioSystem->Initialize();
-	//mCollisionManager->Initialize();
-	mSceneManager->Initialize();
-	Random::Initialize();
+
+	mInput = std::make_shared<InputSystem>();
+	mInput->Initialize(mWindow.get());
+
+	mAudio = std::make_shared<AudioSystem>();
+	mAudio->Initialize();
+
+	mCollisionMgr = std::make_shared<CollisionManager>();
+	mCollisionMgr->Initialize();
+
+	mSceneMgr = std::make_shared<SceneManager>();
+	mSceneMgr->Initialize();
+
+	// TODO: 名前空間からグローバル変数へ
 	Editor::Initialize(mWindow.get());
 
-	// ファイルを読み込む
-	LoadFile();
+	Random::Initialize();
 
-	//mWindow->SetTitle("Set Title");
+	// エンジン初期化ファイルの読み込み
+	if (JsonLoader::LoadEngineInit(this, kEngineInitFilePath))
+	{
+		Console::Log(std::format("Succeeded: Loading \"{}\"\n", kEngineInitFilePath));
+	}
+	else
+	{
+		Console::Log(std::format("Failed: Loading \"{}\"\n", kEngineInitFilePath));
+	}
 }
 
-void RdEngine::Terminate()
+// 終了処理
+void Engine::Terminate()
 {
-	// ファイルへ保存
-	SaveFile();
+	// エンジン初期化ファイルの保存
+	if (JsonLoader::SaveEngineInit(this, kEngineInitFilePath))
+	{
+		Console::Log(std::format("Succeeded: Saving \"{}\"\n", kEngineInitFilePath));
+	}
+	else
+	{
+		Console::Log(std::format("Failed: Saving \"{}\"\n", kEngineInitFilePath));
+	}
+
+	Random::Terminate();
 
 	Editor::Terminate();
 
-	if (mSceneManager)
+	if (mSceneMgr)
 	{
-		mSceneManager->Terminate();
+		mSceneMgr->Terminate();
 	}
-	/*if (mCollisionManager)
+	if (mCollisionMgr)
 	{
-		mCollisionManager->Terminate();
-	}*/
-	if (mAudioSystem)
-	{
-		mAudioSystem->Terminate();
+		mCollisionMgr->Terminate();
 	}
-	/*if (mRenderer)
+	if (mAudio)
+	{
+		mAudio->Terminate();
+	}
+	if (mInput)
+	{
+		mInput->Terminate();
+	}
+	if (mRenderer)
 	{
 		mRenderer->Terminate();
-	}*/
-	if (mInputSystem)
-	{
-		mInputSystem->Terminate();
 	}
-	if (gGraphicsEngine)
+	if (gDirectXCore)
 	{
-		gGraphicsEngine->Terminate();
+		gDirectXCore->Terminate();
 	}
 	if (mWindow)
 	{
@@ -97,108 +129,63 @@ void RdEngine::Terminate()
 	CoUninitialize();
 }
 
-// エンジンを実行
-void RdEngine::Run()
+// 入力処理
+void Engine::Input()
 {
-	Initialize();
-	// ゲームループ
-	while (!mWindow->ProcessMessage())
-	{
-		if (!mIsRunning) break;
-		Input();
-		Update();
-		Render();
-	}
-	Terminate();
-}
-
-// ==================================================
-// ゲームループ用のヘルパー関数
-// ==================================================
-
-// 入力
-void RdEngine::Input()
-{
-	// 次のシーンへ
-	mSceneManager->TransNextScene();
 	// エディタここから
-	Editor::PreProcess();
+	Editor::Begin();
 
-	// 入力
-	mInputSystem->Update();
-	const auto& inputState = mInputSystem->GetState();
+	// 次のシーンがあれば遷移
+	mSceneMgr->TransitionScene();
+
+	mInput->Update();
+
+	const InputSystem::State& inputState = mInput->GetState();
+
 	Editor::Input(inputState);
-	if (Editor::IsUpdate())
+	if (Editor::IsGamePlaying())
 	{
-		mSceneManager->Input(inputState);
+		mSceneMgr->Input(inputState);
 	}
 }
 
-// 更新
-void RdEngine::Update()
+// 更新処理
+void Engine::Update()
 {
 	const float kDeltaTime = 1.0f / 60.0f;
 
-	// エディタ
-	if (Editor::IsEditor())
-	{
-		Editor::ShowEditor(this);
-	}
+	Editor::ShowEditor(this);
 
-	// 更新
 	Editor::Update(kDeltaTime);
-	if (Editor::IsUpdate())
+	if (Editor::IsGamePlaying())
 	{
-		mSceneManager->Update(kDeltaTime);
+		mSceneMgr->UpdateForGame(kDeltaTime);
 	}
 	else
 	{
-		// ワールド行列だけ更新
-		mSceneManager->UpdateWorld();
+		// ワールド行列のみ更新
+		mSceneMgr->UpdateForEditor();
 	}
 }
 
-// 描画
-void RdEngine::Render()
+// 描画処理
+void Engine::Render()
 {
-	gGraphicsEngine->SetSrvHeap();
-	auto cmdList = gGraphicsEngine->GetCmdList();
+	gDirectXCore->BindHeapSRV();
+
+	// シーンを描画
+	auto cmdList = gDirectXCore->GetCmdList();
 	mRenderer->Render(cmdList);
 
 	// エディタここまで
-	Editor::PostProcess();
+	Editor::End();
 
-	gGraphicsEngine->PreRender();
-	mRenderer->RenderFinal(cmdList);
-	gGraphicsEngine->PostRender();
-}
+	// レンダリング前処理
+	gDirectXCore->Begin();
 
-// ==================================================
-// エンジン用ファイル
-// ==================================================
+	// 最終的なレンダーターゲットに描画
+	mRenderer->RenderFinalRT(cmdList);
 
-// ファイルを読み込む
-void RdEngine::LoadFile()
-{
-	if (JsonLoader::Load(this, mFilePath))
-	{
-		Console::Log(std::format("Success: Load \"{}\"\n", mFilePath));
-	}
-	else
-	{
-		Console::Log(std::format("Failure: Load \"{}\"\n", mFilePath));
-	}
-}
-
-// ファイルへ保存
-void RdEngine::SaveFile()
-{
-	if (JsonLoader::Save(this, mFilePath))
-	{
-		Console::Log(std::format("Success: Save \"{}\"\n", mFilePath));
-	}
-	else
-	{
-		Console::Log(std::format("Failure: Save \"{}\"\n", mFilePath));
-	}
+	// レンダリング後処理
+	gDirectXCore->End();
 }

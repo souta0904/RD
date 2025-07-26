@@ -33,10 +33,10 @@ void Window::Initialize()
 	// タイトル
 	mTitle = std::format(
 		"{} Ver.{}.{}.{}\n",
-		RdEngine::kName,
-		RdEngine::kVersion[0],
-		RdEngine::kVersion[1],
-		RdEngine::kVersion[2]);
+		Engine::kName,
+		Engine::kVersion[0],
+		Engine::kVersion[1],
+		Engine::kVersion[2]);
 	//mTitle = "Galaxy";
 
 	// インスタンスハンドルを取得

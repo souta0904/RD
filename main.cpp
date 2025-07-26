@@ -1,8 +1,10 @@
-#include "RdEngine.h"
+#include "RdEngine.h"// Engine.hに変更
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	// エンジンを実行
-	gEngine = std::make_unique<RdEngine>();
+	// TODO: ここからウィンドウサイズとウィンドウタイトルを設定
+	gEngine = std::make_unique<Engine>();
 	gEngine->Run();
+
 	return 0;
 }

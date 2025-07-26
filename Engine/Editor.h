@@ -15,7 +15,7 @@ class Actor;
 class Window;
 class Renderer;
 class SceneManager;
-class RdEngine;
+class Engine;
 
 // コンソール
 namespace Console
@@ -50,7 +50,7 @@ namespace Editor
 	extern EditorState gEditorState;
 
 	inline bool IsEditor() { return !gIsGame; }
-	inline bool IsUpdate() { return gIsGame || (gEditorState == EditorState::kPlay) || (gEditorState == EditorState::kStep); }
+	inline bool IsGamePlaying() { return gIsGame || (gEditorState == EditorState::kPlay) || (gEditorState == EditorState::kStep); }
 
 
 	// デバッグ用カメラ
@@ -72,8 +72,8 @@ namespace Editor
 	void Input(const InputSystem::State& input);
 	void Update(float deltaTime);
 
-	void PreProcess();
-	void PostProcess();
+	void Begin();
+	void End();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	template <class T>
@@ -104,6 +104,6 @@ namespace Editor
 	void ActorTree(const std::vector<Actor*>& actors, Actor*& actorForDev);
 
 	// 開発用
-	void ShowEditor(RdEngine* engine);
+	void ShowEditor(Engine* engine);
 	void ShowState(Renderer* renderer,SceneManager*sceneManager);
 }

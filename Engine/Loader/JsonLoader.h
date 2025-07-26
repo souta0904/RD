@@ -3,7 +3,7 @@
 #include <string>
 
 class Actor;
-class RdEngine;
+class Engine;
 class Renderer;
 class Scene;
 
@@ -12,8 +12,8 @@ class JsonLoader
 public:
 	static const std::string kLevelPath;
 
-	static bool Load(RdEngine* engine, const std::string& filePath);
-	static bool Save(RdEngine* engine, const std::string& filePath);
+	static bool LoadEngineInit(Engine* engine, const std::string& filePath);
+	static bool SaveEngineInit(Engine* engine, const std::string& filePath);
 
 	static bool LoadScene(Scene* scene, const std::string& filePath);
 	static bool SaveScene(Scene* scene, const std::string& filePath);

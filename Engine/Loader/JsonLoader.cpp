@@ -10,7 +10,7 @@ const std::string JsonLoader::kLevelPath = "Assets/Level/";
 // システムファイル
 // ==================================================
 
-bool JsonLoader::Load(RdEngine* engine, const std::string& filePath)
+bool JsonLoader::LoadEngineInit(Engine* engine, const std::string& filePath)
 {
 	std::ifstream file(filePath.c_str());
 	if (!file)
@@ -23,7 +23,7 @@ bool JsonLoader::Load(RdEngine* engine, const std::string& filePath)
 	// -------------------- ここから --------------------
 	if (data.contains("Scenes"))
 	{
-		auto sceneManager = engine->GetSceneManager();
+		auto sceneManager = engine->GetSceneMgr();
 		sceneManager->Load(data);
 	}
 	auto renderer = engine->GetRenderer();
@@ -33,7 +33,7 @@ bool JsonLoader::Load(RdEngine* engine, const std::string& filePath)
 	return true;
 }
 
-bool JsonLoader::Save(RdEngine* engine, const std::string& filePath)
+bool JsonLoader::SaveEngineInit(Engine* engine, const std::string& filePath)
 {
 	std::ofstream file(filePath.c_str());
 	if (!file)
@@ -43,7 +43,7 @@ bool JsonLoader::Save(RdEngine* engine, const std::string& filePath)
 	nlohmann::json data;
 
 	// -------------------- ここから --------------------
-	auto sceneManager = engine->GetSceneManager();
+	auto sceneManager = engine->GetSceneMgr();
 	sceneManager->Save(data);
 	auto renderer = engine->GetRenderer();
 	renderer->SaveFile(data["Renderer"]);

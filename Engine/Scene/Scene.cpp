@@ -26,7 +26,7 @@ void Scene::Initialize()
 {
 	mRenderer = gEngine->GetRenderer();
 	//MyAssert(mRenderer);
-	mCollisionManager = gEngine->GetCollisionManager();
+	mCollisionManager = gEngine->GetCollisionMgr();
 	//MyAssert(mCollisionManager);
 
 	// ロード
@@ -211,7 +211,7 @@ void Scene::UpdateForDev()
 		if (auto payload = ImGui::AcceptDragDropPayload("SCENE_PAYLOAD"))
 		{
 			auto sceneName = (std::string*)(payload->Data);
-			gEngine->GetSceneManager()->ChangeScene(*sceneName);
+			gEngine->GetSceneMgr()->ChangeScene(*sceneName);
 		}
 		ImGui::EndDragDropTarget();
 	}

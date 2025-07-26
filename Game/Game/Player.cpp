@@ -309,7 +309,7 @@ void Player::ActorOnCollisionEnter(Actor* other, CollisionInfo*)
 				mInvincibleTimer = 2.0f;
 			}
 
-			auto audio = gEngine->GetAudioSystem();
+			auto audio = gEngine->GetAudio();
 			auto data = audio->Load("Assets/Audio/Damage.wav");
 			audio->Play(data);
 		}

@@ -15,6 +15,9 @@ public:
 		CollisionInfo mInfo;
 	};
 
+	void Initialize() {}
+	void Terminate() {}
+
 	// すべてのコライダーをテスト
 	void TestAllCollider();
 	// レイキャスト

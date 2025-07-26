@@ -47,7 +47,7 @@ void StarPiece::ActorOnTriggerEnter(Actor* other)
 			manager->GetStarPiece();
 		}
 
-		auto audio = gEngine->GetAudioSystem();
+		auto audio = gEngine->GetAudio();
 		auto data = audio->Load("Assets/Audio/ChipGet.wav");
 		audio->Play(data);
 	}

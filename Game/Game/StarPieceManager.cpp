@@ -38,7 +38,7 @@ void StarPieceManager::ActorUpdate(float deltaTime)
 			if (actor)
 			{
 				actor->SetState(State::kDead);
-				auto audio = gEngine->GetAudioSystem();
+				auto audio = gEngine->GetAudio();
 				auto data = audio->Load("Assets/Audio/Open.wav");
 				audio->Play(data);
 			}

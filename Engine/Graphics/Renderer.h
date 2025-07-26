@@ -24,7 +24,7 @@ class Renderer
 {
 public:
 	void Initialize();
-	//void Terminate();
+	void Terminate() {}
 
 	void LoadFile(const nlohmann::json& json);
 	void SaveFile(nlohmann::json& json);
@@ -37,7 +37,7 @@ public:
 	// シーン描画
 	void RenderScene(ID3D12GraphicsCommandList* cmdList);
 	// 最終結果を描画
-	void RenderFinal(ID3D12GraphicsCommandList* cmdList);
+	void RenderFinalRT(ID3D12GraphicsCommandList* cmdList);
 
 	void Render(ID3D12GraphicsCommandList* cmdList);
 

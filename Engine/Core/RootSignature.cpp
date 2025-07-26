@@ -32,7 +32,7 @@ void RootSignature::Create()
 	HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1_0, &blob, &error);
 	MY_ASSERT(SUCCEEDED(hr));
 	// ルートシグネチャを作成
-	hr = gGraphicsEngine->GetDevice()->CreateRootSignature(
+	hr = gDirectXCore->GetDevice()->CreateRootSignature(
 		0, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&mRootSignature));
 	MY_ASSERT(SUCCEEDED(hr));
 }

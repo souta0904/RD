@@ -18,7 +18,7 @@ PipelineState::PipelineState()
 void PipelineState::Create()
 {
 	// グラフィックスパイプラインを作成
-	[[maybe_unused]] HRESULT hr = gGraphicsEngine->GetDevice()->CreateGraphicsPipelineState(
+	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateGraphicsPipelineState(
 		&mDesc, IID_PPV_ARGS(&mPipelineState));
 	MY_ASSERT(SUCCEEDED(hr));
 }

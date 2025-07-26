@@ -8,6 +8,7 @@ class Random
 {
 public:
 	static void Initialize();
+	static void Terminate() {}
 
 	static int Rand(int min, int max);
 	static float Rand(float min, float max);

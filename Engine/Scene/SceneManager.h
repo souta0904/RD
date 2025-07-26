@@ -11,10 +11,11 @@ public:
 	void Initialize();
 	void Terminate();
 
-	void TransNextScene();// 更新前
+	void TransitionScene();// 更新前
 	void Input(const InputSystem::State& input);
-	void Update(float deltaTime);
-	void UpdateWorld();
+	void UpdateForGame(float deltaTime);
+	void UpdateForEditor();
+	//void UpdateWorldMat();
 	void TestCollision();
 	// シーンを変更
 	void ChangeScene(const std::string& sceneName);

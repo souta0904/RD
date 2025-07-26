@@ -16,7 +16,7 @@ StructuredBuffer::StructuredBuffer()
 StructuredBuffer::~StructuredBuffer()
 {
 	// デスクリプタハンドルを解放
-	gGraphicsEngine->GetSrvHeap().Free(mDescHandle);
+	gDirectXCore->GetSrvHeap().Free(mDescHandle);
 }
 
 void StructuredBuffer::Create(uint32_t size, uint32_t elemCount, void* initData)
@@ -33,8 +33,8 @@ void StructuredBuffer::Create(uint32_t size, uint32_t elemCount, void* initData)
 	desc.SampleDesc.Count = 1;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// 構造化バッファを作成
-	auto device = gGraphicsEngine->GetDevice();
-	[[maybe_unused]] HRESULT hr = gGraphicsEngine->GetDevice()->CreateCommittedResource(
+	auto device = gDirectXCore->GetDevice();
+	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
 		&GraphicsCommon::gHeapUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&mBuff));
 	MY_ASSERT(SUCCEEDED(hr));
@@ -47,7 +47,7 @@ void StructuredBuffer::Create(uint32_t size, uint32_t elemCount, void* initData)
 	}
 
 	// デスクリプタハンドルを割り当て
-	mDescHandle = gGraphicsEngine->GetSrvHeap().Alloc();
+	mDescHandle = gDirectXCore->GetSrvHeap().Alloc();
 	// シェーダリソースビューを作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
