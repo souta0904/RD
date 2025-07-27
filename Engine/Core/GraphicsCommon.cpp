@@ -3,23 +3,27 @@
 namespace DirectXCommonSettings
 {
 	// ヒーププロパティ
-	D3D12_HEAP_PROPERTIES gHeapDefault = {};
+	D3D12_HEAP_PROPERTIES gHeapPropDefault = {};
 	D3D12_HEAP_PROPERTIES gHeapPropUpload = {};
+
 	// ブレンド
 	D3D12_BLEND_DESC gBlendNone = {};
-	D3D12_BLEND_DESC gBlendNormal = {};
-	D3D12_BLEND_DESC gBlendAddition = {};
+	D3D12_BLEND_DESC gBlendAlpha = {};
+	D3D12_BLEND_DESC gBlendAdd = {};
 	D3D12_BLEND_DESC gBlendSubtract = {};
 	D3D12_BLEND_DESC gBlendMultiply = {};
 	D3D12_BLEND_DESC gBlendScreen = {};
+
 	// ラスタライザ
 	D3D12_RASTERIZER_DESC gRasterizerDefault = {};
-	D3D12_RASTERIZER_DESC gRasterizerCullModeNone = {};
-	D3D12_RASTERIZER_DESC gRasterizerFillModeWireframe = {};
+	D3D12_RASTERIZER_DESC gRasterizerCullNone = {};
+	D3D12_RASTERIZER_DESC gRasterizerWireframe = {};
+
 	// 深度ステンシル
 	D3D12_DEPTH_STENCIL_DESC gDepthEnable = {};
 	D3D12_DEPTH_STENCIL_DESC gDepthDisable = {};
-	D3D12_DEPTH_STENCIL_DESC gDepthWriteMaskZero = {};
+	D3D12_DEPTH_STENCIL_DESC gDepthReadOnly = {};
+
 	// サンプラー
 	D3D12_STATIC_SAMPLER_DESC gSamplerLinearWrap = {};
 	D3D12_STATIC_SAMPLER_DESC gSamplerLinearClamp = {};
@@ -28,39 +32,39 @@ namespace DirectXCommonSettings
 void DirectXCommonSettings::Initialize()
 {
 	// ヒーププロパティ
-	gHeapDefault.Type = D3D12_HEAP_TYPE_DEFAULT;
+	gHeapPropDefault.Type = D3D12_HEAP_TYPE_DEFAULT;
 	gHeapPropUpload.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	// ブレンド
+	// ブレンドなし
 	gBlendNone.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	// Normal
-	gBlendNormal.AlphaToCoverageEnable = false;
-	gBlendNormal.IndependentBlendEnable = false;
-	gBlendNormal.RenderTarget[0].BlendEnable = true;
-	gBlendNormal.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	gBlendNormal.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	gBlendNormal.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	gBlendNormal.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	gBlendNormal.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
-	gBlendNormal.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	gBlendNormal.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	// Addition
-	gBlendAddition = gBlendNormal;
-	gBlendAddition.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	gBlendAddition.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-	gBlendAddition.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	// Subtract
-	gBlendSubtract = gBlendNormal;
+	// アルファブレンド
+	gBlendAlpha.AlphaToCoverageEnable = false;
+	gBlendAlpha.IndependentBlendEnable = false;
+	gBlendAlpha.RenderTarget[0].BlendEnable = true;
+	gBlendAlpha.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	gBlendAlpha.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	gBlendAlpha.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	gBlendAlpha.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	gBlendAlpha.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+	gBlendAlpha.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	gBlendAlpha.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	// 加算合成
+	gBlendAdd = gBlendAlpha;
+	gBlendAdd.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	gBlendAdd.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	gBlendAdd.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	// 減算合成
+	gBlendSubtract = gBlendAlpha;
 	gBlendSubtract.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	gBlendSubtract.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	gBlendSubtract.RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-	// Multiply
-	gBlendMultiply = gBlendNormal;
+	// 乗算合成
+	gBlendMultiply = gBlendAlpha;
 	gBlendMultiply.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
 	gBlendMultiply.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 	gBlendMultiply.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	// Screen
-	gBlendScreen = gBlendNormal;
+	// スクリーン合成
+	gBlendScreen = gBlendAlpha;
 	gBlendScreen.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
 	gBlendScreen.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 	gBlendScreen.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
@@ -76,25 +80,25 @@ void DirectXCommonSettings::Initialize()
 	gRasterizerDefault.AntialiasedLineEnable = false;
 	gRasterizerDefault.ForcedSampleCount = 0;
 	gRasterizerDefault.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
-	// D3D12_CULL_MODE_NONE
-	gRasterizerCullModeNone = gRasterizerDefault;
-	gRasterizerCullModeNone.CullMode = D3D12_CULL_MODE_NONE;
-	// D3D12_FILL_MODE_WIREFRAME
-	gRasterizerFillModeWireframe = gRasterizerDefault;
-	gRasterizerFillModeWireframe.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	// カリングなし
+	gRasterizerCullNone = gRasterizerDefault;
+	gRasterizerCullNone.CullMode = D3D12_CULL_MODE_NONE;
+	// ワイヤーフレーム
+	gRasterizerWireframe = gRasterizerDefault;
+	gRasterizerWireframe.FillMode = D3D12_FILL_MODE_WIREFRAME;
 
-	// 深度ステンシル
+	// 深度テストあり
 	gDepthEnable.DepthEnable = true;
 	gDepthEnable.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	gDepthEnable.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	gDepthEnable.StencilEnable = false;
+	// 深度テストなし
 	gDepthDisable.DepthEnable = false;
-	// D3D12_DEPTH_WRITE_MASK_ZERO
-	gDepthWriteMaskZero = gDepthEnable;
-	gDepthWriteMaskZero.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	// 深度読み取り専用
+	gDepthReadOnly = gDepthEnable;
+	gDepthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	// サンプラー
-	// D3D12_TEXTURE_ADDRESS_MODE_WRAP
 	gSamplerLinearWrap.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	gSamplerLinearWrap.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	gSamplerLinearWrap.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -108,7 +112,7 @@ void DirectXCommonSettings::Initialize()
 	gSamplerLinearWrap.ShaderRegister = 0;
 	gSamplerLinearWrap.RegisterSpace = 0;
 	gSamplerLinearWrap.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	// D3D12_TEXTURE_ADDRESS_MODE_CLAMP
+
 	gSamplerLinearClamp.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	gSamplerLinearClamp.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 	gSamplerLinearClamp.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -122,4 +126,9 @@ void DirectXCommonSettings::Initialize()
 	gSamplerLinearClamp.ShaderRegister = 0;
 	gSamplerLinearClamp.RegisterSpace = 0;
 	gSamplerLinearClamp.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+}
+
+void DirectXCommonSettings::Terminate()
+{
+
 }

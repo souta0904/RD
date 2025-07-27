@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/ResourceBank.h"
+#include "Graphics/ResourceBank.h"
 #include <string>
 #include <wrl.h>
 #include <xaudio2.h>

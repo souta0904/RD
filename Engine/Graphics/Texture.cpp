@@ -21,7 +21,7 @@ Texture::Texture()
 Texture::~Texture()
 {
 	// デスクリプタハンドルを解放
-	gDirectXCore->GetSrvHeap().Free(mDescHandle);
+	gDirectXCore->GetHeapSRV()->Free(mDescHandle);
 }
 
 bool Texture::Create(const std::string& filePath)
@@ -63,7 +63,7 @@ bool Texture::Create(const std::string& filePath)
 	auto device = gDirectXCore->GetDevice();
 	// テクスチャバッファを作成
 	hr = device->CreateCommittedResource(
-		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+		&DirectXCommonSettings::gHeapPropDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
 		IID_PPV_ARGS(&mBuff));
 	if (FAILED(hr))
 	{
@@ -71,7 +71,7 @@ bool Texture::Create(const std::string& filePath)
 	}
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresource;
-	DirectX::PrepareUpload(device, mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), subresource);
+	DirectX::PrepareUpload(device.Get(), mipChain.GetImages(), mipChain.GetImageCount(), mipChain.GetMetadata(), subresource);
 	D3D12_RESOURCE_DESC intermediateDesc = {};
 	intermediateDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	intermediateDesc.Width = GetRequiredIntermediateSize(mBuff.Get(), 0, UINT(subresource.size()));
@@ -93,15 +93,16 @@ bool Texture::Create(const std::string& filePath)
 	// テクスチャバッファへ転送
 	auto cmdList = gDirectXCore->GetCmdList();
 	UpdateSubresources(
-		cmdList, mBuff.Get(), intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
+		cmdList.Get(), mBuff.Get(), intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Transition.pResource = mBuff.Get();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 	cmdList->ResourceBarrier(1, &barrier);
-	gDirectXCore->ExecuteCommand();
-	gDirectXCore->WaitGpu();
+	gDirectXCore->ExecuteCmdList();
+	gDirectXCore->WaitGPU();
+	gDirectXCore->ResetCmdList();
 
 	// シェーダリソースビューを作成
 	CreateSrv(DirectX::MakeSRGB(metadata.format), uint32_t(metadata.mipLevels));
@@ -129,7 +130,7 @@ void Texture::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam)
 void Texture::CreateSrv(DXGI_FORMAT format, uint32_t mipLevels)
 {
 	// デスクリプタハンドルを割り当て
-	mDescHandle = gDirectXCore->GetSrvHeap().Alloc();
+	mDescHandle = gDirectXCore->GetHeapSRV()->Alloc();
 	// シェーダリソースビューを作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = format;

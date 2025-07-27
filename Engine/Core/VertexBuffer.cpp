@@ -1,18 +1,11 @@
 #include "VertexBuffer.h"
 #include "GraphicsCommon.h"
 #include "GraphicsEngine.h"
-#include "Helper/MyAssert.h"
+#include <cassert>
 
-VertexBuffer::VertexBuffer()
-	: mBuff(nullptr)
-	, mView()
-	, mData(nullptr)
+bool VertexBuffer::Create(uint32_t size, uint32_t stride, void* initData)
 {
-
-}
-
-void VertexBuffer::Create(uint32_t size, uint32_t stride, void* initData)
-{
+	// 頂点バッファを作成
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	desc.Width = size;
@@ -21,11 +14,18 @@ void VertexBuffer::Create(uint32_t size, uint32_t stride, void* initData)
 	desc.MipLevels = 1;
 	desc.SampleDesc.Count = 1;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// 頂点バッファを作成
 	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
-		&DirectXCommonSettings::gHeapPropUpload, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&mBuff));
-	MY_ASSERT(SUCCEEDED(hr));
+		&DirectXCommonSettings::gHeapPropUpload,
+		D3D12_HEAP_FLAG_NONE,
+		&desc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(mBuff.GetAddressOf())
+	);
+	if (FAILED(hr))
+	{
+		return false;
+	}
 
 	// 頂点バッファビュー
 	mView.BufferLocation = mBuff->GetGPUVirtualAddress();
@@ -33,16 +33,18 @@ void VertexBuffer::Create(uint32_t size, uint32_t stride, void* initData)
 	mView.StrideInBytes = stride;
 
 	mBuff->Map(0, nullptr, &mData);
-	// 初期化用のデータがあればコピー
 	if (initData)
 	{
 		Copy(initData);
 	}
+
+	return true;
 }
 
-void VertexBuffer::Bind(ID3D12GraphicsCommandList* cmdList)
+void VertexBuffer::Bind(ComPtr<ID3D12GraphicsCommandList> cmdList)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
+	assert(mBuff);
 	cmdList->IASetVertexBuffers(0, 1, &mView);
 }
 

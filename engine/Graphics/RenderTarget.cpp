@@ -1,6 +1,6 @@
 #include "RenderTarget.h"
-#include "GraphicsCommon.h"
-#include "GraphicsEngine.h"
+#include "core/GraphicsCommon.h"
+#include "core/GraphicsEngine.h"
 #include "Helper/MyAssert.h"
 
 RenderTarget::RenderTarget()
@@ -19,8 +19,8 @@ RenderTarget::RenderTarget()
 RenderTarget::~RenderTarget()
 {
 	// デスクリプタハンドルを解放
-	gDirectXCore->GetRtvHeap().Free(mRtvHandle);
-	gDirectXCore->GetDsvHeap().Free(mDsvHandle);
+	gDirectXCore->GetHeapRTV()->Free(mRtvHandle);
+	gDirectXCore->GetHeapDSV()->Free(mDsvHandle);
 }
 
 void RenderTarget::Create(uint32_t width, uint32_t height)
@@ -40,7 +40,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff = nullptr;
 	auto device = gDirectXCore->GetDevice();
 	[[maybe_unused]] HRESULT hr = device->CreateCommittedResource(
-		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearVal,
+		&DirectXCommonSettings::gHeapPropDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearVal,
 		IID_PPV_ARGS(&texBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 	// テクスチャを作成
@@ -53,13 +53,13 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	clearVal.DepthStencil.Depth = 1.0f;
 	// 深度バッファを作成
 	hr = device->CreateCommittedResource(
-		&DirectXCommonSettings::gHeapDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
+		&DirectXCommonSettings::gHeapPropDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
 		IID_PPV_ARGS(&mDepthBuff));
 	MY_ASSERT(SUCCEEDED(hr));
 
 	// デスクリプタハンドルを割り当て
-	mRtvHandle = gDirectXCore->GetRtvHeap().Alloc();
-	mDsvHandle = gDirectXCore->GetDsvHeap().Alloc();
+	mRtvHandle = gDirectXCore->GetHeapRTV()->Alloc();
+	mDsvHandle = gDirectXCore->GetHeapDSV()->Alloc();
 	// レンダーターゲットビューを作成
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;

@@ -62,7 +62,7 @@ void ParticleManager::Update(float deltaTime)
 
 void ParticleManager::Draw(Model* model)
 {
-	MY_ASSERT(ParticleCommon::mCmdList);
+	assert(ParticleCommon::mCmdList);
 	for (auto& mesh : model->GetMeshes())
 	{
 		mSBuff->Bind(ParticleCommon::mCmdList, 0);

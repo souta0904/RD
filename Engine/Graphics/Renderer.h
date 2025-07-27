@@ -1,8 +1,8 @@
 #pragma once
 #include "Actor/DebugCamera.h"
-#include "Core/RenderTarget.h"
-#include "Core/ResourceBank.h"
-#include "Core/Shader.h"
+#include "Graphics/RenderTarget.h"
+#include "Graphics/ResourceBank.h"
+#include "Graphics/Shader.h"
 #include "GaussianBlur.h"
 #include "LightManager.h"
 #include "Model/Animation.h"

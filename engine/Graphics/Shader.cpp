@@ -12,7 +12,7 @@ Shader::Shader()
 bool Shader::CompileVs(const std::string& filePath)
 {
 	mFilePath = filePath;
-	mBlob = gDirectXCore->CompileShader(filePath, "vs_6_0");
+	mBlob = gDirectXCore->CompileHLSL(filePath, "vs_6_0");
 	return CheckResult();
 }
 
@@ -20,7 +20,7 @@ bool Shader::CompileVs(const std::string& filePath)
 bool Shader::CompileGs(const std::string& filePath)
 {
 	mFilePath = filePath;
-	mBlob = gDirectXCore->CompileShader(filePath, "gs_6_0");
+	mBlob = gDirectXCore->CompileHLSL(filePath, "gs_6_0");
 	return CheckResult();
 }
 
@@ -28,7 +28,7 @@ bool Shader::CompileGs(const std::string& filePath)
 bool Shader::CompilePs(const std::string& filePath)
 {
 	mFilePath = filePath;
-	mBlob = gDirectXCore->CompileShader(filePath, "ps_6_0");
+	mBlob = gDirectXCore->CompileHLSL(filePath, "ps_6_0");
 	return CheckResult();
 }
 

@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="engine\Component\Animator.cpp" />
     <ClCompile Include="engine\Audio\AudioSystem.cpp" />
+    <ClCompile Include="engine\core\RootParameter.cpp" />
     <ClCompile Include="engine\Graphics\Model\SkinCluster.cpp" />
     <ClCompile Include="External\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Game\Game\Attractor.cpp" />
@@ -134,9 +135,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="engine\core\GraphicsEngine.cpp" />
     <ClCompile Include="engine\core\IndexBuffer.cpp" />
     <ClCompile Include="engine\core\PipelineState.cpp" />
-    <ClCompile Include="engine\core\RenderTarget.cpp" />
+    <ClCompile Include="engine\Graphics\RenderTarget.cpp" />
     <ClCompile Include="engine\core\RootSignature.cpp" />
-    <ClCompile Include="engine\core\Shader.cpp" />
+    <ClCompile Include="engine\Graphics\Shader.cpp" />
     <ClCompile Include="engine\core\StructuredBuffer.cpp" />
     <ClCompile Include="engine\core\VertexBuffer.cpp" />
     <ClCompile Include="engine\Editor.cpp" />
@@ -233,11 +234,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="engine\core\GraphicsEngine.h" />
     <ClInclude Include="engine\core\IndexBuffer.h" />
     <ClInclude Include="engine\core\PipelineState.h" />
-    <ClInclude Include="engine\core\RenderTarget.h" />
-    <ClInclude Include="engine\core\ResourceBank.h" />
+    <ClInclude Include="engine\Graphics\RenderTarget.h" />
+    <ClInclude Include="engine\Graphics\ResourceBank.h" />
     <ClInclude Include="engine\core\RootParameter.h" />
     <ClInclude Include="engine\core\RootSignature.h" />
-    <ClInclude Include="engine\core\Shader.h" />
+    <ClInclude Include="engine\Graphics\Shader.h" />
     <ClInclude Include="engine\core\StructuredBuffer.h" />
     <ClInclude Include="engine\core\VertexBuffer.h" />
     <ClInclude Include="engine\Editor.h" />

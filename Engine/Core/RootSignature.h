@@ -1,36 +1,40 @@
 #pragma once
-#include "Helper/MyAssert.h"
 #include "RootParameter.h"
+#include <cassert>
 #include <memory>
 #include <wrl.h>
 
+// ルートシグネチャ
 class RootSignature
 {
-public:
-	RootSignature(uint32_t numRootParameters, uint32_t numSamplers);
-	void Create();
-	void Bind(ID3D12GraphicsCommandList* cmdList);
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	// アクセッサ
-	ID3D12RootSignature* Get() const { return mRootSignature.Get(); }
-	// ルートパラメータ
-	RootParameter& RootParameters(uint32_t index)
+public:
+	RootSignature(uint32_t numParameters, uint32_t numSamplers);
+
+	// ルートパラメータ、サンプラーにアクセス
+	RootParameter& Parameters(uint32_t idx)
 	{
-		MY_ASSERT(index >= 0 && index < mNumRootParameters);
-		return mRootParameters[index];
+		assert(idx >= 0 && idx < mNumParameters);
+		return mParameters[idx];
 	}
-	// サンプラー
-	D3D12_STATIC_SAMPLER_DESC& Samplers(uint32_t index)
+	D3D12_STATIC_SAMPLER_DESC& Samplers(uint32_t idx)
 	{
-		MY_ASSERT(index >= 0 && index < mNumSamplers);
-		return mSamplers[index];
+		assert(idx >= 0 && idx < mNumSamplers);
+		return mSamplers[idx];
 	}
+
+	bool Create();
+	void Bind(ComPtr<ID3D12GraphicsCommandList> cmdList);
+
+	ComPtr<ID3D12RootSignature> GetRootSignature() const { return mRootSignature; }
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> mRootSignature;
+	ComPtr<ID3D12RootSignature> mRootSignature;
 	// ルートパラメータ
-	uint32_t mNumRootParameters;
-	std::unique_ptr<RootParameter[]> mRootParameters;
+	uint32_t mNumParameters;
+	std::unique_ptr<RootParameter[]> mParameters;
 	// サンプラー
 	uint32_t mNumSamplers;
 	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> mSamplers;

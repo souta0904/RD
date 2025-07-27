@@ -62,11 +62,11 @@ namespace Editor
 		{
 			MY_ASSERT(false);
 		}
-		auto& srvHeap = gDirectXCore->GetSrvHeap();
-		auto handle = srvHeap.Alloc();
+		auto srvHeap = gDirectXCore->GetHeapSRV();
+		auto handle = srvHeap->Alloc();
 		if (!ImGui_ImplDX12_Init(
-			gDirectXCore->GetDevice(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-			srvHeap.GetDescriptorHeap().Get(), handle->mCPU, handle->mGPU))
+			gDirectXCore->GetDevice().Get(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+			srvHeap->GetDescriptorHeap().Get(), handle->mCPU, handle->mGPU))
 		{
 			MY_ASSERT(false);
 		}

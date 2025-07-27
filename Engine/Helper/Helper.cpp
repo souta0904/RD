@@ -9,6 +9,11 @@ namespace Helper
 		OutputDebugStringA(str.c_str());
 	}
 
+	void Log(const std::wstring& str)
+	{
+		Log(ConvertString(str));
+	}
+
 	// マルチバイト文字をワイド文字へ変換
 	std::wstring ConvertString(const std::string& str)
 	{
@@ -33,7 +38,7 @@ namespace Helper
 	}
 
 	// ワイド文字をマルチバイト文字へ変換
-	std::string ConvertToStr(const std::wstring& wstr)
+	std::string ConvertString(const std::wstring& wstr)
 	{
 		if (wstr.empty())
 		{

@@ -54,13 +54,16 @@ void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appN
 	mWindow = std::make_shared<Window>();
 	if (!mWindow->Initialize(width, height, title))
 	{
-		Helper::Log("Failed to initialize window.\n");
+		Helper::Log("Failed to Window::Initialize().\n");
+	}
+
+	gDirectXCore = std::make_shared<DirectXCore>();
+	if (!gDirectXCore->Initialize(mWindow.get()))
+	{
+		Helper::Log("Failed to DirectXCore::Initialize().\n");
 	}
 
 	// TODO: 成功チェック
-	gDirectXCore = std::make_shared<DirectXCore>();
-	gDirectXCore->Initialize(mWindow.get());
-
 	mRenderer = std::make_shared<Renderer>();
 	mRenderer->Initialize();
 
@@ -180,11 +183,11 @@ void Engine::Update()
 // 描画処理
 void Engine::Render()
 {
-	gDirectXCore->BindHeapSRV();
+	auto cmdList = gDirectXCore->GetCmdList();
+	gDirectXCore->GetHeapSRV()->Bind(cmdList);
 
 	// シーンを描画
-	auto cmdList = gDirectXCore->GetCmdList();
-	mRenderer->RenderScene(cmdList);
+	mRenderer->RenderScene(cmdList.Get());
 
 	// エディタここまで
 	Editor::End();
@@ -193,7 +196,7 @@ void Engine::Render()
 	gDirectXCore->Begin();
 
 	// 最終的なレンダーターゲットに描画
-	mRenderer->RenderFinalRT(cmdList);
+	mRenderer->RenderFinalRT(cmdList.Get());
 
 	// レンダリング後処理
 	gDirectXCore->End();

@@ -13,10 +13,10 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	// ルートシグネチャ
 	//mBlurRs.Initialize(3, 1);
 	mBlurRs = std::make_unique<RootSignature>(3, 1);
-	mBlurRs->RootParameters(0).InitConstant(0);
-	mBlurRs->RootParameters(1).InitDescriptorTable(1);
-	mBlurRs->RootParameters(1).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-	mBlurRs->RootParameters(2).InitConstant(1);
+	mBlurRs->Parameters(0).InitConstants(0);
+	mBlurRs->Parameters(1).InitDescriptorTable(1);
+	mBlurRs->Parameters(1).InitDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+	mBlurRs->Parameters(2).InitConstants(1);
 	mBlurRs->Samplers(0) = DirectXCommonSettings::gSamplerLinearClamp;
 	mBlurRs->Create();
 
@@ -26,13 +26,14 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	Shader* ps = renderer->GetPs("Assets/Shader/GaussianBlur/BlurPs.hlsl");
 	// パイプラインステート
 	// 横ブラー
-	mHBlurPso.SetRootSignature(mBlurRs.get());
-	mHBlurPso.SetVertexShader(hBlurVs);
-	mHBlurPso.SetPixelShader(ps);
-	mHBlurPso.SetBlendState(DirectXCommonSettings::gBlendNormal);
-	mHBlurPso.SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
-	mHBlurPso.SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
-	D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
+	PSOInit init = {};
+	init.mRootSignature = mBlurRs.get();
+	init.mVertexShader = hBlurVs;
+	init.mPixelShader = ps;
+	init.mBlendDesc = DirectXCommonSettings::gBlendAlpha;
+	init.mRasterizerDesc = DirectXCommonSettings::gRasterizerCullNone;
+	init.mDepthStencilDesc = DirectXCommonSettings::gDepthDisable;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayouts(2);
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
 	inputLayouts[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -41,12 +42,13 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	inputLayouts[1].SemanticIndex = 0;
 	inputLayouts[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputLayouts[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	mHBlurPso.SetInputLayout(_countof(inputLayouts), inputLayouts);
-	mHBlurPso.Create();
+	//mHBlurPso.SetInputLayout(_countof(inputLayouts), inputLayouts);
+	init.mInputLayouts = inputLayouts;
+	mHBlurPso.Create(init);
 	// 縦ブラー
 	mVBlurPso = mHBlurPso;
-	mVBlurPso.SetVertexShader(vBlurVs);
-	mVBlurPso.Create();
+	init.mVertexShader = vBlurVs;
+	mVBlurPso.Create(init);
 
 	auto window = gEngine->GetWindow();
 	// 縮小バッファ

@@ -1,16 +1,13 @@
 #include "RootSignature.h"
 #include "GraphicsEngine.h"
 
-RootSignature::RootSignature(uint32_t numRootParameters, uint32_t numSamplers)
-	: mRootSignature(nullptr)
-	, mNumRootParameters(numRootParameters)
+RootSignature::RootSignature(uint32_t numParameters, uint32_t numSamplers)
+	: mNumParameters(numParameters)
 	, mNumSamplers(numSamplers)
-	, mRootParameters(nullptr)
-	, mSamplers(nullptr)
 {
-	if (mNumRootParameters > 0)
+	if (mNumParameters > 0)
 	{
-		mRootParameters.reset(new RootParameter[mNumRootParameters]);
+		mParameters.reset(new RootParameter[mNumParameters]);
 	}
 	if (mNumSamplers > 0)
 	{
@@ -18,27 +15,45 @@ RootSignature::RootSignature(uint32_t numRootParameters, uint32_t numSamplers)
 	}
 }
 
-void RootSignature::Create()
+bool RootSignature::Create()
 {
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
-	desc.NumParameters = mNumRootParameters;
-	desc.pParameters = &(mRootParameters.get()->mRootParameter);
+	desc.NumParameters = mNumParameters;
+	if (desc.NumParameters > 0)
+	{
+		desc.pParameters = &mParameters[0].mRootParameter;
+	}
 	desc.NumStaticSamplers = mNumSamplers;
 	desc.pStaticSamplers = mSamplers.get();
 	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	// シリアル化
-	Microsoft::WRL::ComPtr<ID3DBlob> blob = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> error = nullptr;
-	HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1_0, &blob, &error);
-	MY_ASSERT(SUCCEEDED(hr));
+
+	// シリアライズ
+	ComPtr<ID3DBlob> rsBlob = nullptr;
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1_0, rsBlob.GetAddressOf(), errorBlob.GetAddressOf());
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
 	// ルートシグネチャを作成
 	hr = gDirectXCore->GetDevice()->CreateRootSignature(
-		0, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&mRootSignature));
-	MY_ASSERT(SUCCEEDED(hr));
+		0,
+		rsBlob->GetBufferPointer(),
+		rsBlob->GetBufferSize(),
+		IID_PPV_ARGS(mRootSignature.GetAddressOf())
+	);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	return true;
 }
 
-void RootSignature::Bind(ID3D12GraphicsCommandList* cmdList)
+void RootSignature::Bind(ComPtr<ID3D12GraphicsCommandList> cmdList)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
+	assert(mRootSignature);
 	cmdList->SetGraphicsRootSignature(mRootSignature.Get());
 }

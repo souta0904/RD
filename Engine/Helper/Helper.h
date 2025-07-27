@@ -6,10 +6,11 @@ namespace Helper
 {
 	// 出力ウィンドウへ出力
 	void Log(const std::string& str);
+	void Log(const std::wstring& str);
 
 	// 文字列を変換
 	std::wstring ConvertString(const std::string& str);
-	std::string ConvertToStr(const std::wstring& wstr);
+	std::string ConvertString(const std::wstring& wstr);
 
 	// ファイルパスからファイル名を抽出
 	std::string ExtractFileName(const std::string& filePath);

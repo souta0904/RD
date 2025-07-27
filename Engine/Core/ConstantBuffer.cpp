@@ -17,7 +17,7 @@ bool ConstantBuffer::Create(uint32_t size, void* initData)
 	desc.MipLevels = 1;
 	desc.SampleDesc.Count = 1;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
+	[[maybe_unused]] HRESULT hr = gDirectXCore->GetDevice()->CreateCommittedResource(
 		&DirectXCommonSettings::gHeapPropUpload,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,

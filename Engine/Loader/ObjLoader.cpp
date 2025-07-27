@@ -4,6 +4,7 @@
 #include <fstream>
 #include <format>
 #include <sstream>
+#include "Helper/Helper.h"
 
 Model* ObjLoader::Load(const std::string& modelName)
 {

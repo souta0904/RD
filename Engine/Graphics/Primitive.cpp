@@ -14,21 +14,54 @@ void Primitive::Initialize(Renderer* renderer)
 	// ルートシグネチャ
 	//mRootSignature.Initialize(1, 1);
 	mRootSignature = std::make_unique<RootSignature>(1, 1);
-	mRootSignature->RootParameters(0).InitConstant(0);
+	mRootSignature->Parameters(0).InitConstants(0);
 	mRootSignature->Samplers(0) = DirectXCommonSettings::gSamplerLinearWrap;
 	mRootSignature->Create();
 
 	// シェーダ
 	Shader* vs = renderer->GetVs("Assets/Shader/Primitive/PrimVs.hlsl");
 	Shader* ps = renderer->GetPs("Assets/Shader/Primitive/PrimPs.hlsl");
-	// パイプラインステート
-	mLinePso2.SetRootSignature(mRootSignature.get());
-	mLinePso2.SetVertexShader(vs);
-	mLinePso2.SetPixelShader(ps);
-	mLinePso2.SetBlendState(DirectXCommonSettings::gBlendNormal);
-	mLinePso2.SetRasterizerState(DirectXCommonSettings::gRasterizerCullModeNone);
-	mLinePso2.SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
-	D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
+	//// パイプラインステート
+	//mLinePso2.SetRootSignature(mRootSignature.get());
+	//mLinePso2.SetVertexShader(vs);
+	//mLinePso2.SetPixelShader(ps);
+	//mLinePso2.SetBlendState(DirectXCommonSettings::gBlendAlpha);
+	//mLinePso2.SetRasterizerState(DirectXCommonSettings::gRasterizerCullNone);
+	//mLinePso2.SetDepthStencilState(DirectXCommonSettings::gDepthDisable);
+	//D3D12_INPUT_ELEMENT_DESC inputLayouts[2] = {};
+	//inputLayouts[0].SemanticName = "POSITION";
+	//inputLayouts[0].SemanticIndex = 0;
+	//inputLayouts[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	//inputLayouts[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	//inputLayouts[1].SemanticName = "COLOR";
+	//inputLayouts[1].SemanticIndex = 0;
+	//inputLayouts[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//inputLayouts[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	//mLinePso2.SetInputLayout(_countof(inputLayouts), inputLayouts);
+	//mLinePso2.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
+	//mLinePso2.Create();
+	//mLinePso3 = mLinePso2;
+	////mLinePso3.SetDepthStencilDesc(GraphicsCommon::gDepthEnable);
+	//mLinePso3.Create();
+	//mPrimPso2 = mLinePso2;
+	//mPrimPso2.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	//mPrimPso2.Create();
+	//mPrimPso3 = mLinePso3;
+	//mPrimPso3.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	//mPrimPso3.Create();
+
+	//mGridPso = mLinePso3;
+	//mGridPso.SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
+	//mGridPso.Create();
+
+	PSOInit init = {};
+	init.mRootSignature = mRootSignature.get();
+	init.mVertexShader = vs;
+	init.mPixelShader = ps;
+	init.mBlendDesc = DirectXCommonSettings::gBlendAlpha;
+	init.mRasterizerDesc = DirectXCommonSettings::gRasterizerCullNone;
+	init.mDepthStencilDesc = DirectXCommonSettings::gDepthDisable;
+	std::vector<D3D12_INPUT_ELEMENT_DESC>inputLayouts(2);
 	inputLayouts[0].SemanticName = "POSITION";
 	inputLayouts[0].SemanticIndex = 0;
 	inputLayouts[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -37,22 +70,22 @@ void Primitive::Initialize(Renderer* renderer)
 	inputLayouts[1].SemanticIndex = 0;
 	inputLayouts[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputLayouts[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	mLinePso2.SetInputLayout(_countof(inputLayouts), inputLayouts);
-	mLinePso2.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
-	mLinePso2.Create();
-	mLinePso3 = mLinePso2;
-	//mLinePso3.SetDepthStencilDesc(GraphicsCommon::gDepthEnable);
-	mLinePso3.Create();
-	mPrimPso2 = mLinePso2;
-	mPrimPso2.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	mPrimPso2.Create();
-	mPrimPso3 = mLinePso3;
-	mPrimPso3.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	mPrimPso3.Create();
+	init.mInputLayouts = inputLayouts;
+	init.mPrimitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	mLinePso2.Create(init);
 
-	mGridPso = mLinePso3;
-	mGridPso.SetDepthStencilState(DirectXCommonSettings::gDepthEnable);
-	mGridPso.Create();
+	//mLinePso3.SetDepthStencilDesc(GraphicsCommon::gDepthEnable);
+	mLinePso3.Create(init);
+
+	init.mPrimitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	mPrimPso2.Create(init);
+
+	init.mPrimitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	mPrimPso3.Create(init);
+
+	init.mDepthStencilDesc = DirectXCommonSettings::gDepthEnable;
+	init.mPrimitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	mGridPso.Create(init);
 
 	// 頂点バッファ
 	mVBuff = std::make_unique<VertexBuffer>();

@@ -16,6 +16,7 @@ bool DescriptorHeap::Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescrip
 	}
 
 	// ハンドル管理者の作成
+	// TODO: コンストラクタで要素数を指定
 	mHandlePool = std::make_unique<Pool<DescriptorHandle>>();
 	mHandlePool->Initialize(mDesc.NumDescriptors);
 
