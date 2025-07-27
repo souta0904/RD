@@ -1,5 +1,4 @@
 #include "Material.h"
-#include "Helper/MyAssert.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
 
@@ -17,7 +16,7 @@ Material::Material()
 
 void Material::Create(Renderer* renderer)
 {
-	MY_ASSERT(renderer);
+	assert(renderer);
 	Constant initData = {};
 	initData.mBaseColor = mBaseColor;
 	initData.mSpecular = mSpecular;
@@ -25,12 +24,12 @@ void Material::Create(Renderer* renderer)
 	mCBuff = std::make_unique<ConstantBuffer>();
 	mCBuff->Create(sizeof(Constant), &initData);
 	mTexture = renderer->GetTexture(mTexturePath);
-	MY_ASSERT(mTexture);
+	assert(mTexture);
 }
 
 void Material::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t matRootParamIdx, uint32_t texRootParamIdx)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 	Constant data = {};
 	data.mBaseColor = mBaseColor;
 	data.mSpecular = mSpecular;

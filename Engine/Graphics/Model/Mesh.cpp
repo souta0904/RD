@@ -1,8 +1,8 @@
 #include "Mesh.h"
 #include "Animation.h"
 #include "Skeleton.h"
-#include "Helper/MyAssert.h"
 #include "Material.h"
+#include <cassert>
 
 Mesh::~Mesh()
 {
@@ -59,7 +59,7 @@ void Mesh::Draw(ID3D12GraphicsCommandList* cmdList,
 void Mesh::DrawInstancing(ID3D12GraphicsCommandList* cmdList,
 	uint32_t instanceCount, uint32_t matRootParamIdx, uint32_t texRootParamIdx)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 
 	if (mMaterial)
 	{

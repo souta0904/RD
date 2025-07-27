@@ -1,6 +1,7 @@
 #include "RdEngine.h"
 #include "Core/GraphicsEngine.h"
 #include "Editor.h"
+#include "Helper/Helper.h"
 #include "Loader/JsonLoader.h"
 #include "Random.h"
 
@@ -76,7 +77,14 @@ void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appN
 	mRenderer->Initialize();
 
 	mInput = std::make_shared<InputSystem>();
-	mInput->Initialize(mWindow.get());
+	if (!mInput->Initialize(mWindow.get()))
+	{
+		Helper::Log("Failed to InputSystem::Initialize().\n");
+	}
+	else
+	{
+		Helper::Log("InputSystem::Initialize() succeeded.\n");
+	}
 
 	mAudio = std::make_shared<AudioSystem>();
 	mAudio->Initialize();

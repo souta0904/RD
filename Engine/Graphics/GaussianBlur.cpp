@@ -6,8 +6,8 @@
 
 void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 {
-	MY_ASSERT(texture);
-	MY_ASSERT(renderer);
+	assert(texture);
+	assert(renderer);
 	mTexture = texture;
 
 	// ルートシグネチャ

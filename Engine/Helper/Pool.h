@@ -3,37 +3,32 @@
 #include <memory>
 #include <vector>
 
+// TODO: リングバッファを実装
+
+// アイテムプール
 template <typename T>
 class Pool
 {
 private:
-	// アイテム
 	struct Item
 	{
-		T mValue;
-		// アクティブか
-		bool mIsActive;
-
-		Item()
-			: mValue()
-			, mIsActive(false)
-		{}
+		T mVal;
+		bool mIsActive = false;
 	};
 
 public:
-	void Initialize(uint32_t capacity)
+	Pool(uint32_t size)
+		: mItems(size)
 	{
-		mItems.reserve(capacity);
-		for (uint32_t i = 0; i < capacity; ++i)
+		for (uint32_t i = 0; i < size; ++i)
 		{
-			mItems.emplace_back(std::make_unique<Item>());
+			mItems[i] = std::make_unique<Item>();
 		}
 	}
 
-	// アイテムを確保
+	// アイテム確保
 	T* Alloc(std::function<void(uint32_t, T&)> initFunc = nullptr)
 	{
-		// 非アクティブなアイテムを探す
 		for (uint32_t i = 0; i < mItems.size(); ++i)
 		{
 			if (!mItems[i]->mIsActive)
@@ -41,21 +36,20 @@ public:
 				mItems[i]->mIsActive = true;
 				if (initFunc)
 				{
-					initFunc(i, mItems[i]->mValue);
+					initFunc(i, mItems[i]->mVal);
 				}
-				return &mItems[i]->mValue;
+				return &mItems[i]->mVal;
 			}
 		}
-		// 空きがない
 		return nullptr;
 	}
 
-	// アイテムを解放
-	void Free(T* value)
+	// アイテム解放
+	void Free(T* val)
 	{
 		for (auto& item : mItems)
 		{
-			if (&item->mValue == value)
+			if (&item->mVal == val)
 			{
 				item->mIsActive = false;
 				break;
@@ -63,29 +57,27 @@ public:
 		}
 	}
 
-	uint32_t GetCapacity() const
+	uint32_t GetSize() const
 	{
-		return uint32_t(mItems.size());
+		return static_cast<uint32_t>(mItems.size());
 	}
 
-	// アクティブなアイテムの数
 	uint32_t GetActiveCount() const
 	{
-		uint32_t count = 0;
+		uint32_t counter = 0;
 		for (const auto& item : mItems)
 		{
 			if (item->mIsActive)
 			{
-				++count;
+				++counter;
 			}
 		}
-		return count;
+		return counter;
 	}
 
-	// 空きの数
-	uint32_t GetFreeCount() const
+	uint32_t GetInactiveCount() const
 	{
-		return GetCapacity() - GetActiveCount();
+		return GetSize() - GetActiveCount();
 	}
 
 private:

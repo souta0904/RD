@@ -1,5 +1,5 @@
 #include "Audio/AudioSystem.h"
-#include "Helper/MyAssert.h"
+#include <cassert>
 #include <fstream>
 
 #pragma comment(lib, "xaudio2.lib")
@@ -7,9 +7,9 @@
 void AudioSystem::Initialize()
 {
 	HRESULT hr = XAudio2Create(&mXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 	hr = mXAudio2->CreateMasteringVoice(&mMasterVoice);
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 }
 
 void AudioSystem::Terminate()
@@ -34,7 +34,7 @@ AudioSystem::SoundData* AudioSystem::Load(const std::string& filePath)
 	file.open(filePath, std::ios_base::binary);
 	if (file.fail())
 	{
-		MY_ASSERT(false);
+		assert(false);
 		//return nullptr;
 	}
 
@@ -43,11 +43,11 @@ AudioSystem::SoundData* AudioSystem::Load(const std::string& filePath)
 	file.read((char*)&riff, sizeof(RIFF));
 	if (strncmp(riff.mChunk.mID, "RIFF", 4) != 0)
 	{
-		MY_ASSERT(false);
+		assert(false);
 	}
 	if (strncmp(riff.mFormat, "WAVE", 4) != 0)
 	{
-		MY_ASSERT(false);
+		assert(false);
 	}
 
 	Chunk chunk = {};
@@ -59,7 +59,7 @@ AudioSystem::SoundData* AudioSystem::Load(const std::string& filePath)
 		// fmt
 		if (strncmp(chunk.mID, "fmt ", 4) == 0)
 		{
-			MY_ASSERT(chunk.mSize <= sizeof(fmt));
+			assert(chunk.mSize <= sizeof(fmt));
 			file.read((char*)&fmt, chunk.mSize);
 			//
 			//file.seekg(chunk.mSize - sizeof(WAVEFORMATEX), std::ios_base::cur);
@@ -126,7 +126,7 @@ void AudioSystem::Play(SoundData* soundData)
 	// SourceVoiceを作成
 	IXAudio2SourceVoice* sourceVoice = nullptr;
 	HRESULT hr = mXAudio2->CreateSourceVoice(&sourceVoice, &soundData->mFormat);
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 
 	// 
 	XAUDIO2_BUFFER buff = {};

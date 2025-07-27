@@ -27,7 +27,7 @@ void MeshRenderer::Draw()
 	if (mIsVisible && mModel)
 	{
 		//mModel->Draw(mOwner->mTransform, mShaderType);
-		MY_ASSERT(ModelCommon::mCmdList);
+		assert(ModelCommon::mCmdList);
 		ModelCommon::SetPso(mShaderType);
 		for (auto& mesh : mModel->GetMeshes())
 		{
@@ -50,7 +50,7 @@ void MeshRenderer::Load(const nlohmann::json& json)
 	RendererComponent::Load(json);
 	// Shader Type
 	uint32_t shaderType = 0;
-	JsonHelper::GetUint(json, "Shader Type", shaderType);
+	JsonHelper::GetUint32(json, "Shader Type", shaderType);
 	mShaderType = ModelCommon::Type(shaderType);
 	// Model
 	std::string modelName;
@@ -77,7 +77,7 @@ void MeshRenderer::Load(const nlohmann::json& json)
 void MeshRenderer::Save(nlohmann::json& json)
 {
 	RendererComponent::Save(json);
-	JsonHelper::SetUint(json, "Shader Type", uint32_t(mShaderType));
+	JsonHelper::SetUint32(json, "Shader Type", uint32_t(mShaderType));
 	if (mModel)
 	{
 		JsonHelper::SetString(json, "Model", mModel->GetName());

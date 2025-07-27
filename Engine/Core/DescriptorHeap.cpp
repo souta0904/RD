@@ -1,6 +1,6 @@
 #include "DescriptorHeap.h"
 #include "GraphicsEngine.h"
-#include "Helper/MyAssert.h"
+#include <cassert>
 
 // デスクリプタヒープを作成
 bool DescriptorHeap::Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors, bool isShaderVisible)
@@ -17,8 +17,8 @@ bool DescriptorHeap::Create(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescrip
 
 	// ハンドル管理者の作成
 	// TODO: コンストラクタで要素数を指定
-	mHandlePool = std::make_unique<Pool<DescriptorHandle>>();
-	mHandlePool->Initialize(mDesc.NumDescriptors);
+	mHandlePool = std::make_unique<Pool<DescriptorHandle>>(mDesc.NumDescriptors);
+	//mHandlePool->Initialize(mDesc.NumDescriptors);
 
 	// デスクリプタのインクリメントサイズを取得
 	mIncrementSize = device->GetDescriptorHandleIncrementSize(mDesc.Type);

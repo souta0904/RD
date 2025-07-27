@@ -1,13 +1,13 @@
 #include "Editor.h"
 #include "Actor/Actor.h"
 #include "Core/GraphicsEngine.h"
-#include "Helper/MyAssert.h"
 #include "Window.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Renderer.h"
 #include "Input/InputSystem.h"
 #include "Scene/SceneManager.h"
 #include "RdEngine.h"
+#include <cassert>
 
 namespace Console
 {
@@ -46,11 +46,11 @@ namespace Editor
 
 	void Initialize(Window* window)
 	{
-		MY_ASSERT(window);
+		assert(window);
 
 		if (!ImGui::CreateContext())
 		{
-			MY_ASSERT(false);
+			assert(false);
 		}
 		// フォント
 		std::string fontPath = "Assets/Font/Roboto-Regular.ttf";
@@ -60,7 +60,7 @@ namespace Editor
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		if (!ImGui_ImplWin32_Init(window->GetHWnd()))
 		{
-			MY_ASSERT(false);
+			assert(false);
 		}
 		auto srvHeap = gDirectXCore->GetHeapSRV();
 		auto handle = srvHeap->Alloc();
@@ -68,7 +68,7 @@ namespace Editor
 			gDirectXCore->GetDevice().Get(), 2, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 			srvHeap->GetDescriptorHeap().Get(), handle->mCPU, handle->mGPU))
 		{
-			MY_ASSERT(false);
+			assert(false);
 		}
 
 		ImGuiStyle& style = ImGui::GetStyle();

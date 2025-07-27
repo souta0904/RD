@@ -1,6 +1,7 @@
 #include "Sprite.h"
 #include "Component/Transform.h"
 #include "Graphics/Texture.h"
+#include "Helper/Helper.h"
 #include "SpriteCommon.h"
 
 Sprite::Sprite()
@@ -29,8 +30,8 @@ void Sprite::Create(Texture* texture)
 
 void Sprite::Draw(Transform* transform)
 {
-	MY_ASSERT(transform);
-	MY_ASSERT(SpriteCommon::mCmdList);
+	assert(transform);
+	assert(SpriteCommon::mCmdList);
 	if (mTexture)
 	{
 		// 頂点
@@ -87,7 +88,7 @@ void Sprite::Draw(Transform* transform)
 // Post Effect
 void Sprite::Draw(const Vector2& size)
 {
-	MY_ASSERT(SpriteCommon::mCmdList);
+	assert(SpriteCommon::mCmdList);
 	if (mTexture)
 	{
 		// 頂点

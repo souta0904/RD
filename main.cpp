@@ -1,4 +1,5 @@
 #include "RdEngine.h"// Engine.hに変更
+#include "Helper/Helper.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

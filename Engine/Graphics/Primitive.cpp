@@ -8,7 +8,7 @@
 
 void Primitive::Initialize(Renderer* renderer)
 {
-	MY_ASSERT(renderer);
+	assert(renderer);
 	mRenderer = renderer;
 
 	// ルートシグネチャ
@@ -103,7 +103,7 @@ void Primitive::Initialize(Renderer* renderer)
 // レンダリング前
 void Primitive::PreRendering(ID3D12GraphicsCommandList* cmdList)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 	mCmdList = cmdList;
 	mIndex = 0;
 	// カメラ
@@ -473,7 +473,7 @@ void Primitive::DrawGrid(uint32_t gridNum)
 	//LineList3(v);
 	// グリッド用
 	uint32_t vSize = uint32_t(v.size());
-	MY_ASSERT(mIndex + vSize < kMaxVertex);
+	assert(mIndex + vSize < kMaxVertex);
 	auto data = static_cast<Vertex*>(mVBuff->GetData());
 	std::copy(v.begin(), v.end(), &data[mIndex]);
 	mRootSignature->Bind(mCmdList);
@@ -488,9 +488,9 @@ void Primitive::DrawGrid(uint32_t gridNum)
 // Line List 2D
 void Primitive::LineList2(const std::vector<Vertex>& v)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	uint32_t size = uint32_t(v.size());
-	MY_ASSERT(mIndex + size < kMaxVertex);
+	assert(mIndex + size < kMaxVertex);
 	auto data = static_cast<Vertex*>(mVBuff->GetData());
 	std::copy(v.begin(), v.end(), &data[mIndex]);
 	mRootSignature->Bind(mCmdList);
@@ -505,9 +505,9 @@ void Primitive::LineList2(const std::vector<Vertex>& v)
 // Line List 3D
 void Primitive::LineList3(const std::vector<Vertex>& v)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	uint32_t size = uint32_t(v.size());
-	MY_ASSERT(mIndex + size < kMaxVertex);
+	assert(mIndex + size < kMaxVertex);
 	auto data = static_cast<Vertex*>(mVBuff->GetData());
 	std::copy(v.begin(), v.end(), &data[mIndex]);
 	mRootSignature->Bind(mCmdList);
@@ -522,9 +522,9 @@ void Primitive::LineList3(const std::vector<Vertex>& v)
 // Triangle List 2D
 void Primitive::TriList2(const std::vector<Vertex>& v)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	uint32_t size = uint32_t(v.size());
-	MY_ASSERT(mIndex + size < kMaxVertex);
+	assert(mIndex + size < kMaxVertex);
 	auto data = static_cast<Vertex*>(mVBuff->GetData());
 	std::copy(v.begin(), v.end(), &data[mIndex]);
 	mRootSignature->Bind(mCmdList);

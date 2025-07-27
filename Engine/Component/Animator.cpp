@@ -3,7 +3,6 @@
 #include "Editor.h"
 #include "Graphics/Renderer.h"
 #include "Helper/JsonHelper.h"
-#include "Helper/MyAssert.h"
 #include "Scene/Scene.h"
 #include <format>
 

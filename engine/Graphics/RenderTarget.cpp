@@ -1,7 +1,7 @@
 #include "RenderTarget.h"
 #include "core/GraphicsCommon.h"
 #include "core/GraphicsEngine.h"
-#include "Helper/MyAssert.h"
+#include <cassert>
 
 RenderTarget::RenderTarget()
 	: mCmdList(nullptr)
@@ -42,7 +42,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	[[maybe_unused]] HRESULT hr = device->CreateCommittedResource(
 		&DirectXCommonSettings::gHeapPropDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearVal,
 		IID_PPV_ARGS(&texBuff));
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 	// テクスチャを作成
 	mRenderTarget = std::make_shared<Texture>();
 	mRenderTarget->CreateFromBuff(texBuff);
@@ -55,7 +55,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 	hr = device->CreateCommittedResource(
 		&DirectXCommonSettings::gHeapPropDefault, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearVal,
 		IID_PPV_ARGS(&mDepthBuff));
-	MY_ASSERT(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr));
 
 	// デスクリプタハンドルを割り当て
 	mRtvHandle = gDirectXCore->GetHeapRTV()->Alloc();
@@ -88,7 +88,7 @@ void RenderTarget::Create(uint32_t width, uint32_t height)
 // レンダリング前処理
 void RenderTarget::PreRender(ID3D12GraphicsCommandList* cmdList)
 {
-	MY_ASSERT(!mCmdList);
+	assert(!mCmdList);
 	mCmdList = cmdList;
 
 	// シェーダリソースからレンダーターゲットへ
@@ -114,7 +114,7 @@ void RenderTarget::PreRender(ID3D12GraphicsCommandList* cmdList)
 // レンダリング後処理
 void RenderTarget::PostRender()
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 
 	// レンダーターゲットからシェーダリソースへ
 	D3D12_RESOURCE_BARRIER barrier = {};

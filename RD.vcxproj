@@ -158,8 +158,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="engine\Graphics\Sprite\Sprite.cpp" />
     <ClCompile Include="engine\Graphics\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="engine\Graphics\Texture.cpp" />
-    <ClCompile Include="engine\Helper\Helper.cpp" />
-    <ClCompile Include="engine\Helper\JsonHelper.cpp" />
+    <ClCompile Include="engine\helper\Helper.cpp" />
+    <ClCompile Include="engine\helper\JsonHelper.cpp" />
     <ClCompile Include="engine\input\Gamepad.cpp" />
     <ClCompile Include="engine\input\InputSystem.cpp" />
     <ClCompile Include="engine\input\Keyboard.cpp" />
@@ -208,7 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="engine\core\DescriptorHandle.h" />
     <ClInclude Include="engine\Graphics\CircleShadow.h" />
     <ClInclude Include="engine\Graphics\Model\SkinCluster.h" />
-    <ClInclude Include="engine\Helper\Pool.h" />
+    <ClInclude Include="engine\helper\Pool.h" />
     <ClInclude Include="External\ImGui\ImGuizmo.h" />
     <ClInclude Include="Game\Game\Attractor.h" />
     <ClInclude Include="engine\Actor\Actor.h" />
@@ -264,9 +264,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="engine\Graphics\Sprite\Sprite.h" />
     <ClInclude Include="engine\Graphics\Sprite\SpriteCommon.h" />
     <ClInclude Include="engine\Graphics\Texture.h" />
-    <ClInclude Include="engine\Helper\Helper.h" />
-    <ClInclude Include="engine\Helper\JsonHelper.h" />
-    <ClInclude Include="engine\Helper\MyAssert.h" />
+    <ClInclude Include="engine\helper\Helper.h" />
+    <ClInclude Include="engine\helper\JsonHelper.h" />
     <ClInclude Include="engine\input\Gamepad.h" />
     <ClInclude Include="engine\input\InputSystem.h" />
     <ClInclude Include="engine\input\Keyboard.h" />

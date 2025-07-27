@@ -2,7 +2,7 @@
 #include "Core/GraphicsEngine.h"
 #include "Core/GraphicsCommon.h"
 #include "Helper/Helper.h"
-#include "Helper/MyAssert.h"
+#include <cassert>
 #include <DirectXTex/d3dx12.h>
 #include <format>
 
@@ -123,7 +123,7 @@ void Texture::CreateFromBuff(Microsoft::WRL::ComPtr<ID3D12Resource> buff)
 
 void Texture::Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 	cmdList->SetGraphicsRootDescriptorTable(rootParam, mDescHandle->mGPU);
 }
 

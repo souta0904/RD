@@ -1,8 +1,8 @@
 #include "Quaternion.h"
-#include "Helper/MyAssert.h"
 #include "Matrix4.h"
 #include "MyMath.h"
 #include "Vector3.h"
+#include <cassert>
 
 const Quaternion Quaternion::kIdentity(1.0f, 0.0f, 0.0f, 0.0f);
 
@@ -20,7 +20,7 @@ Quaternion::Quaternion(float w, float x, float y, float z)
 
 Quaternion::Quaternion(const Vector3& axis, float theta)
 {
-	MY_ASSERT(fabs(Length(axis) - 1.0f) <= 0.001f);//MyMath::kEpsilon);
+	assert(fabs(Length(axis) - 1.0f) <= 0.001f);//MyMath::kEpsilon);
 	float thetaOver2 = theta * 0.5f;
 	float sin = sinf(thetaOver2);
 	w = cosf(thetaOver2);

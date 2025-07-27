@@ -11,7 +11,7 @@ Model* ObjLoader::Load(const std::string& modelName)
 	//Helper::WriteToConsole(std::format("Create: \"{}\"\n", modelName.c_str()));
 
 	std::string filePath =
-		ModelCommon::kModelPath + Helper::ExcludeExtension(modelName) + "/";
+		ModelCommon::kModelPath + Helper::GetStem(modelName) + "/";
 	std::ifstream fstream;
 	fstream.open(filePath + modelName);
 	if (fstream.fail())
@@ -167,7 +167,7 @@ bool ObjLoader::LoadMtl(
 		{
 			std::string texturePath;
 			sstream >> texturePath;
-			material->mTexturePath = filePath + Helper::ExtractFileName(texturePath);
+			material->mTexturePath = filePath + Helper::GetFilename(texturePath);
 		}
 	}
 	fstream.close();

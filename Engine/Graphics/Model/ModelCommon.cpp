@@ -2,7 +2,6 @@
 #include "Core/GraphicsCommon.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Renderer.h"
-#include "Helper/MyAssert.h"
 
 const std::string ModelCommon::kModelPath = "Assets/Model/";
 
@@ -15,7 +14,7 @@ std::unique_ptr<ConstantBuffer> ModelCommon::mCBuff;
 
 void ModelCommon::Initialize(Renderer* renderer)
 {
-	MY_ASSERT(renderer);
+	assert(renderer);
 	mRenderer = renderer;
 
 	// ルートシグネチャ
@@ -157,7 +156,7 @@ void ModelCommon::Initialize(Renderer* renderer)
 // レンダリング前
 void ModelCommon::PreRendering(ID3D12GraphicsCommandList* cmdList)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 	mCmdList = cmdList;
 	mRootSignature->Bind(mCmdList);
 	mPsos[uint32_t(Type::Default)].Bind(mCmdList);// とりま
@@ -186,12 +185,12 @@ void ModelCommon::PostRendering()
 
 void ModelCommon::SetPso(Type type)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	mPsos[uint32_t(type)].Bind(mCmdList);
 }
 
 void ModelCommon::SetSkinnedPso(Type type)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	mSkinnedPsos[uint32_t(type)].Bind(mCmdList);
 }

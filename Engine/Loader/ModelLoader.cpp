@@ -4,6 +4,7 @@
 #include "Graphics/Model/ModelCommon.h"
 #include "Graphics/Renderer.h"
 #include <format>
+#include "Helper/Helper.h"
 
 Renderer* ModelLoader::mRenderer = nullptr;
 
@@ -13,7 +14,7 @@ Model* ModelLoader::LoadModel(const std::string& modelName)
 	//Helper::WriteToConsole(std::format("Create: \"{}\"\n", modelName.c_str()));
 
 	std::string filePath =
-		ModelCommon::kModelPath + Helper::ExcludeExtension(modelName) + "/";
+		ModelCommon::kModelPath + Helper::GetStem(modelName) + "/";
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile((filePath + modelName).c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	//aiProcess_Triangulate: 三角形化
@@ -42,7 +43,7 @@ Model* ModelLoader::LoadModel(const std::string& modelName)
 		{
 			aiString texturePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
-			myMaterial->mTexturePath = filePath + Helper::ExtractFileName(texturePath.C_Str());
+			myMaterial->mTexturePath = filePath + Helper::GetFilename(texturePath.C_Str());
 		}
 		// 追加
 		model->mMaterials.emplace(myMaterial->GetName(), myMaterial);
@@ -54,8 +55,8 @@ Model* ModelLoader::LoadModel(const std::string& modelName)
 	{
 		Mesh* myMesh = new Mesh();
 		aiMesh* mesh = scene->mMeshes[meshIndex];
-		MY_ASSERT(mesh->HasNormals());
-		MY_ASSERT(mesh->HasTextureCoords(0));
+		assert(mesh->HasNormals());
+		assert(mesh->HasTextureCoords(0));
 
 		// 面
 		myMesh->mVertices.resize(mesh->mNumVertices);
@@ -74,7 +75,7 @@ Model* ModelLoader::LoadModel(const std::string& modelName)
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
 		{
 			aiFace& face = mesh->mFaces[faceIndex];
-			MY_ASSERT(face.mNumIndices <= 4);
+			assert(face.mNumIndices <= 4);
 
 			for (uint32_t i = 0; i < face.mNumIndices; ++i)
 			{
@@ -155,7 +156,7 @@ void ModelLoader::LoadAnimation(const std::string& modelName)
 	//Helper::WriteToConsole(std::format("Create: \"{}\"\n", modelName.c_str()));
 
 	std::string filePath =
-		ModelCommon::kModelPath + Helper::ExcludeExtension(modelName) + "/";
+		ModelCommon::kModelPath + Helper::GetStem(modelName) + "/";
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile((filePath + modelName).c_str(), 0);
 	//MyAssert(scene->mNumAnimations != 0);

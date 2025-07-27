@@ -1,10 +1,10 @@
 #include "SpriteCommon.h"
 #include "Core/GraphicsCommon.h"
-#include "Helper/MyAssert.h"
 #include "Graphics/Renderer.h"
 #include "Sprite.h"
 #include "RdEngine.h"
 #include "Window.h"
+#include <cassert>
 
 ID3D12GraphicsCommandList* SpriteCommon::mCmdList = nullptr;
 std::unique_ptr<RootSignature> SpriteCommon::mRootSignature;
@@ -13,7 +13,7 @@ Matrix4 SpriteCommon::mProjMat = Matrix4::kIdentity;
 
 void SpriteCommon::Initialize(Renderer* renderer)
 {
-	MY_ASSERT(renderer);
+	assert(renderer);
 
 	mRootSignature = std::make_unique<RootSignature>(2, 1);
 	// ルートシグネチャ
@@ -103,7 +103,7 @@ void SpriteCommon::Initialize(Renderer* renderer)
 // レンダリング前
 void SpriteCommon::PreRendering(ID3D12GraphicsCommandList* cmdList)
 {
-	MY_ASSERT(cmdList);
+	assert(cmdList);
 	mCmdList = cmdList;
 	mRootSignature->Bind(mCmdList);
 	mPipelineStates[uint32_t(Blend::Normal)].Bind(mCmdList);
@@ -119,6 +119,6 @@ void SpriteCommon::PostRendering()
 // パイプラインステートをセット
 void SpriteCommon::SetBlend(Blend blend)
 {
-	MY_ASSERT(mCmdList);
+	assert(mCmdList);
 	mPipelineStates[uint32_t(blend)].Bind(mCmdList);
 }

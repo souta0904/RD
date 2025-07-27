@@ -1,5 +1,4 @@
 #pragma once
-#include "Helper/MyAssert.h"
 #include <cmath>
 
 // 4次元ベクトル

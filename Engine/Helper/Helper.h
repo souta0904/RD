@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-// ヘルパー関数群
+// ヘルパー関数
 namespace Helper
 {
 	// 出力ウィンドウへ出力
@@ -10,12 +10,10 @@ namespace Helper
 
 	// 文字列を変換
 	std::wstring ConvertString(const std::string& str);
-	std::string ConvertString(const std::wstring& wstr);
+	std::string ConvertString(const std::wstring& str);
 
-	// ファイルパスからファイル名を抽出
-	std::string ExtractFileName(const std::string& filePath);
-	// ファイル名から拡張子を抽出
-	std::string ExtractExtension(const std::string& fileName);
-	// ファイル名から拡張子を除外
-	std::string ExcludeExtension(const std::string& fileName);
+	// ファイル名操作
+	std::string GetFilename(const std::string& path);
+	std::string GetStem(const std::string& path);
+	std::string GetExtension(const std::string& path);
 }

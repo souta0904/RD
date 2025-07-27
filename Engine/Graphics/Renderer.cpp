@@ -14,6 +14,7 @@
 #include "RdEngine.h"
 #include "Sprite/SpriteCommon.h"
 #include "Window.h"
+#include "Helper/Helper.h"
 
 void Renderer::Load()
 {
@@ -148,7 +149,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 						auto actor2 = new Actor(gEngine->GetSceneMgr()->GetCurrScene());
 						auto mr = new MeshRenderer(actor2);
 						mr->SetModel(model);
-						actor2->SetName(Helper::ExcludeExtension(model->GetName()));
+						actor2->SetName(Helper::GetStem(model->GetName()));
 					}
 					ImGui::EndDragDropTarget();
 				}
@@ -639,7 +640,7 @@ void Renderer::UpdateForDev()
 			// Group
 			ImGui::BeginGroup();
 			ImGui::Image((void*)(intptr_t)t->GetDescHandle()->mGPU.ptr, ImVec2(40.0f, 40.0f));
-			auto texName = Helper::ExtractFileName(t->GetFilePath());
+			auto texName = Helper::GetFilename(t->GetFilePath());
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
 				ImGui::SetDragDropPayload("TEXTURE_PAYLOAD", &t, sizeof(t));
