@@ -46,7 +46,7 @@ public:
 
 	// 基本
 	virtual void Initialize() {}
-	void ProcessInput(const InputSystem::State& input);
+	void ProcessInput(const InputState& input);
 	void Update(float deltaTime);
 	void LastUpdate(float deltaTime);
 	void UpdateWorld(Actor* parent = nullptr);
@@ -142,7 +142,7 @@ protected:
 	// ==================================================
 	// アクター固有
 	// ==================================================
-	virtual void ActorInput(const InputSystem::State&) {}
+	virtual void ActorInput(const InputState&) {}
 	virtual void ActorUpdate(float) {}
 	virtual void ActorLastUpdate(float) {}
 	// Collision

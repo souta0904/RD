@@ -12,8 +12,8 @@ MeteoriteChip::MeteoriteChip(Scene* scene)
 	mr->SetModel(mScene->GetRenderer()->GetModel("MeteoriteChip.obj"));
 
 	mRandRot = Random::Rand(
-		Vector3(-MyMath::k2Pi, -MyMath::k2Pi, -MyMath::k2Pi),
-		Vector3(MyMath::k2Pi, MyMath::k2Pi, MyMath::k2Pi)) * 0.5f;
+		Vector3(-RdMath::k2Pi, -RdMath::k2Pi, -RdMath::k2Pi),
+		Vector3(RdMath::k2Pi, RdMath::k2Pi, RdMath::k2Pi)) * 0.5f;
 }
 
 void MeteoriteChip::ActorUpdate(float deltaTime)

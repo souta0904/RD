@@ -189,32 +189,32 @@ void MeshParticleRenderer::UpdateForDev()
 		Emitter emitter = mParticle->GetEmitter();
 		if (ImGui::TreeNode("Emitter"))
 		{
-			ImGui::DragFloat("Life", &emitter.mLife, 0.01f, emitter.mDelay, MyMath::kInfinity);
+			ImGui::DragFloat("Life", &emitter.mLife, 0.01f, emitter.mDelay, RdMath::kInfinity);
 			ImGui::Text(std::format("Curr Time: {:6f}", emitter.mCurrTime).c_str());
 			ImGui::InputScalar("Amount", ImGuiDataType_U32, &emitter.mAmount);
-			ImGui::DragFloat("Frequency", &emitter.mFrequency, 0.01f, 0.01f, MyMath::kInfinity);
+			ImGui::DragFloat("Frequency", &emitter.mFrequency, 0.01f, 0.01f, RdMath::kInfinity);
 			ImGui::Text(std::format("Frequency Time: {:6f}", emitter.mFrequencyTime).c_str());
 			ImGui::Checkbox("Is Loop", &emitter.mIsLoop);
 			ImGui::DragFloat("Delay", &emitter.mDelay, 0.01f, 0.0f, emitter.mLife);
 			Editor::Combo("Shape", emitter.mShape);
 			ImGui::DragFloat3("Box.Min", &emitter.mBoxMin.x, 0.01f);
 			ImGui::DragFloat3("Box.Max", &emitter.mBoxMax.x, 0.01f);
-			ImGui::DragFloat("Sphere.Radius", &emitter.mSphereRadius, 0.01f, 0.0f, MyMath::kInfinity);
+			ImGui::DragFloat("Sphere.Radius", &emitter.mSphereRadius, 0.01f, 0.0f, RdMath::kInfinity);
 			ImGui::TreePop();
 		}
 		// Particle Init
 		if (ImGui::TreeNode("Init"))
 		{
 			ImGui::DragFloat("Life.Min", &emitter.mInitLife.mMin, 0.01f, 0.0f, emitter.mInitLife.mMax);
-			ImGui::DragFloat("Life.Max", &emitter.mInitLife.mMax, 0.01f, emitter.mInitLife.mMin, MyMath::kInfinity);
+			ImGui::DragFloat("Life.Max", &emitter.mInitLife.mMax, 0.01f, emitter.mInitLife.mMin, RdMath::kInfinity);
 			ImGui::DragFloat3("Vel.Min", &emitter.mInitVel.mMin.x, 0.01f);
 			ImGui::DragFloat3("Vel.Max", &emitter.mInitVel.mMax.x, 0.01f);
 			ImGui::DragFloat3("Accel.Min", &emitter.mInitAccel.mMin.x, 0.01f);
 			ImGui::DragFloat3("Accel.Max", &emitter.mInitAccel.mMax.x, 0.01f);
 			ImGui::DragFloat("SScale.Min", &emitter.mInitSScale.mMin, 0.01f, 0.0f, emitter.mInitSScale.mMax);
-			ImGui::DragFloat("SScale.Max", &emitter.mInitSScale.mMax, 0.01f, emitter.mInitSScale.mMin, MyMath::kInfinity);
+			ImGui::DragFloat("SScale.Max", &emitter.mInitSScale.mMax, 0.01f, emitter.mInitSScale.mMin, RdMath::kInfinity);
 			ImGui::DragFloat("EScale.Min", &emitter.mInitEScale.mMin, 0.01f, 0.0f, emitter.mInitEScale.mMax);
-			ImGui::DragFloat("EScale.Max", &emitter.mInitEScale.mMax, 0.01f, emitter.mInitEScale.mMin, MyMath::kInfinity);
+			ImGui::DragFloat("EScale.Max", &emitter.mInitEScale.mMax, 0.01f, emitter.mInitEScale.mMin, RdMath::kInfinity);
 			ImGui::DragFloat3("SRot.Min", &emitter.mInitSRot.mMin.x, 0.01f);
 			ImGui::DragFloat3("SRot.Max", &emitter.mInitSRot.mMax.x, 0.01f);
 			ImGui::DragFloat3("ERot.Min", &emitter.mInitERot.mMin.x, 0.01f);

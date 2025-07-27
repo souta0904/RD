@@ -4,9 +4,9 @@
 Vector3 Closest(const Vector3& a, const AABB& b)
 {
 	return Vector3(
-		MyMath::Clamp(a.x, b.mMin.x, b.mMax.x),
-		MyMath::Clamp(a.y, b.mMin.y, b.mMax.y),
-		MyMath::Clamp(a.z, b.mMin.z, b.mMax.z));
+		RdMath::Clamp(a.x, b.mMin.x, b.mMax.x),
+		RdMath::Clamp(a.y, b.mMin.y, b.mMax.y),
+		RdMath::Clamp(a.z, b.mMin.z, b.mMax.z));
 }
 
 // 線と線
@@ -19,7 +19,7 @@ float Distance(const Line& a, const Line& b, float* outT1, float* outT2)
 	float d = Dot(v1, v1) * v2v2 - v1v2 * v1v2;
 	float t1 = 0.0f;
 	float t2 = 0.0f;
-	if (fabs(d) <= MyMath::kEpsilon)
+	if (fabs(d) <= RdMath::kEpsilon)
 	{
 		float dist = Distance(a.mStart, b, &t2);
 		if (outT1)
@@ -57,7 +57,7 @@ float Distance(const Segment& a, const Segment& b, float* outT1, float* outT2)
 	Line l2 = { b.mStart,b.mEnd };
 	float t1 = 0.0f;
 	float t2 = 0.0f;
-	if (fabs(1.0f - Dot(v1, v2)) < MyMath::kEpsilon)
+	if (fabs(1.0f - Dot(v1, v2)) < RdMath::kEpsilon)
 	{
 		float dist = Distance(a.mStart, l2, &t2);
 		if (t2 >= 0.0f && t2 <= 1.0f)
@@ -90,7 +90,7 @@ float Distance(const Segment& a, const Segment& b, float* outT1, float* outT2)
 			return dist;
 		}
 	}
-	t1 = MyMath::Clamp(t1, Segment::kMinT, Segment::kMaxT);
+	t1 = RdMath::Clamp(t1, Segment::kMinT, Segment::kMaxT);
 	Vector3 p1 = a.GetPoint(t1);
 	float dist = Distance(p1, l2, &t2);
 	if (t2 >= 0.0f && t2 <= 1.0f)
@@ -105,7 +105,7 @@ float Distance(const Segment& a, const Segment& b, float* outT1, float* outT2)
 		}
 		return dist;
 	}
-	t2 = MyMath::Clamp(t2, Segment::kMinT, Segment::kMaxT);
+	t2 = RdMath::Clamp(t2, Segment::kMinT, Segment::kMaxT);
 	Vector3 p2 = b.GetPoint(t2);
 	dist = Distance(p2, l1, &t1);
 	if (t1 >= 0.0f && t1 <= 1.0f)
@@ -120,7 +120,7 @@ float Distance(const Segment& a, const Segment& b, float* outT1, float* outT2)
 		}
 		return dist;
 	}
-	t1 = MyMath::Clamp(t1, Segment::kMinT, Segment::kMaxT);
+	t1 = RdMath::Clamp(t1, Segment::kMinT, Segment::kMaxT);
 	p1 = a.GetPoint(t1);
 	if (outT1)
 	{
@@ -207,9 +207,9 @@ bool Intersect(const Sphere& a, const Sphere& b, CollisionInfo& info)
 bool Intersect(const Sphere& a, const AABB& b, CollisionInfo& info)
 {
 	Vector3 p = Vector3(
-		MyMath::Clamp(a.mCenter.x, b.mMin.x, b.mMax.x),
-		MyMath::Clamp(a.mCenter.y, b.mMin.y, b.mMax.y),
-		MyMath::Clamp(a.mCenter.z, b.mMin.z, b.mMax.z));
+		RdMath::Clamp(a.mCenter.x, b.mMin.x, b.mMax.x),
+		RdMath::Clamp(a.mCenter.y, b.mMin.y, b.mMax.y),
+		RdMath::Clamp(a.mCenter.z, b.mMin.z, b.mMax.z));
 	float d = Length(p - a.mCenter);
 	if (d <= a.mRadius)
 	{
@@ -261,10 +261,10 @@ bool Intersect(const AABB& a, const AABB& b, CollisionInfo& info)
 		a.mMin.z <= b.mMax.z &&
 		a.mMax.z >= b.mMin.z)
 	{
-		float x = MyMath::Min(a.mMax.x - b.mMin.x, b.mMax.x - a.mMin.x);
-		float y = MyMath::Min(a.mMax.y - b.mMin.y, b.mMax.y - a.mMin.y);
-		float z = MyMath::Min(a.mMax.z - b.mMin.z, b.mMax.z - a.mMin.z);
-		float minOverlap = MyMath::kInfinity;
+		float x = RdMath::Min(a.mMax.x - b.mMin.x, b.mMax.x - a.mMin.x);
+		float y = RdMath::Min(a.mMax.y - b.mMin.y, b.mMax.y - a.mMin.y);
+		float z = RdMath::Min(a.mMax.z - b.mMin.z, b.mMax.z - a.mMin.z);
+		float minOverlap = RdMath::kInfinity;
 		if (x < minOverlap)
 		{
 			minOverlap = x;
@@ -380,13 +380,13 @@ bool Intersect(const OBB& a, const OBB& b, CollisionInfo& info)
 		b.mCenter - d2[0] - d2[1] + d2[2],
 		b.mCenter - d2[0] - d2[1] - d2[2]
 	};
-	float minOverlap = MyMath::kInfinity;
+	float minOverlap = RdMath::kInfinity;
 	Vector3 minAxis;
 	for (const auto& axis : axes)
 	{
-		if (axis.x > -MyMath::kEpsilon && axis.x < MyMath::kEpsilon &&
-			axis.y > -MyMath::kEpsilon && axis.y < MyMath::kEpsilon &&
-			axis.z > -MyMath::kEpsilon && axis.z < MyMath::kEpsilon)
+		if (axis.x > -RdMath::kEpsilon && axis.x < RdMath::kEpsilon &&
+			axis.y > -RdMath::kEpsilon && axis.y < RdMath::kEpsilon &&
+			axis.z > -RdMath::kEpsilon && axis.z < RdMath::kEpsilon)
 		{
 			continue;
 		}
@@ -397,13 +397,13 @@ bool Intersect(const OBB& a, const OBB& b, CollisionInfo& info)
 		for (uint32_t i = 0; i < 8; ++i)
 		{
 			float dist1 = Dot(c1[i], axis);
-			min1 = MyMath::Min(dist1, min1);
-			max1 = MyMath::Max(dist1, max1);
+			min1 = RdMath::Min(dist1, min1);
+			max1 = RdMath::Max(dist1, max1);
 			float dist2 = Dot(c2[i], axis);
-			min2 = MyMath::Min(dist2, min2);
-			max2 = MyMath::Max(dist2, max2);
+			min2 = RdMath::Min(dist2, min2);
+			max2 = RdMath::Max(dist2, max2);
 		}
-		float overlap = (max1 - min1) + (max2 - min2) - (MyMath::Max(max1, max2) - MyMath::Min(min1, min2));
+		float overlap = (max1 - min1) + (max2 - min2) - (RdMath::Max(max1, max2) - RdMath::Min(min1, min2));
 		if (overlap < 0.0f)
 		{
 			return false;

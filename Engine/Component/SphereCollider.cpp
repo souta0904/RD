@@ -26,7 +26,7 @@ void SphereCollider::OnUpdateWorld()
 	mWorld.mCenter += world.GetTranslation();
 	Vector3 scale = world.GetScale();
 	// 最大成分
-	float max = MyMath::Min(MyMath::Min(scale.x, scale.y), scale.z);
+	float max = RdMath::Min(RdMath::Min(scale.x, scale.y), scale.z);
 	mWorld.mRadius *= max;
 }
 

@@ -69,7 +69,7 @@ namespace Editor
 	void Initialize(Window* window);
 	void Terminate();
 
-	void Input(const InputSystem::State& input);
+	void Input(const InputState& input);
 	void Update(float deltaTime);
 
 	void Begin();

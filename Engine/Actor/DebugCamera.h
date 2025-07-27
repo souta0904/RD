@@ -7,7 +7,7 @@ class DebugCamera
 {
 public:
 	DebugCamera();
-	void Input(const InputSystem::State& input);
+	void Input(const InputState& input);
 	void Update(float deltaTime);
 	Camera* GetCamera() const { return mCamera.get(); }
 

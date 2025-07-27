@@ -10,18 +10,18 @@ PlayerCamera::PlayerCamera(Scene* scene)
 	: Actor(scene)
 	, mTarget(nullptr)
 	, mDistance(22.0f)
-	, mRot(MyMath::kPiOver2 * 0.2f)
+	, mRot(RdMath::kPiOver2 * 0.2f)
 	, mRotVel(0.0f)
-	, mRotSpeed(MyMath::kPiOver2)
+	, mRotSpeed(RdMath::kPiOver2)
 	, mLeeway(1.5f)
 {
 	new CameraComponent(this);
 }
 
-void PlayerCamera::ActorInput(const InputSystem::State& input)
+void PlayerCamera::ActorInput(const InputState& input)
 {
 	// スティック
-	mRotVel = -input.mGamepad.GetRStick().y;
+	mRotVel = -input.mGamepad.GetRightStick().y;
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_UP))
 	{
@@ -45,7 +45,7 @@ void PlayerCamera::ActorUpdate(float deltaTime)
 			Vector3 b = Vector3(0.0f, 0.0f, -1.0f) * rotation;
 			Vector3 r = Vector3(1.0f, 0.0f, 0.0f) * rotation;
 			mRot += mRotVel * mRotSpeed * deltaTime;
-			mRot = MyMath::Clamp(mRot, kRotMin, kRotMax);
+			mRot = RdMath::Clamp(mRot, kRotMin, kRotMax);
 			Quaternion rot = Quaternion(r, mRot);
 			// Position
 			Vector3 corrPos = Vector3(0.0f, 2.0f, 0.0f) * rotation;
@@ -61,7 +61,7 @@ void PlayerCamera::ActorUpdate(float deltaTime)
 		Vector3 b = Vector3(0.0f, 0.0f, -1.0f) * rotation;
 		Vector3 r = Vector3(1.0f, 0.0f, 0.0f) * rotation;
 		mRot += mRotVel * mRotSpeed * deltaTime;
-		mRot = MyMath::Clamp(mRot, kRotMin, kRotMax);
+		mRot = RdMath::Clamp(mRot, kRotMin, kRotMax);
 		Quaternion rot = Quaternion(r, mRot);
 		// Position
 		Vector3 corrPos = Vector3(0.0f, 2.0f, 0.0f) * rotation;
@@ -69,7 +69,7 @@ void PlayerCamera::ActorUpdate(float deltaTime)
 
 		const float kSpeed = 0.2f;
 		mTransform->mRotation = Slerp(mTransform->mRotation, rotation * rot, kSpeed);
-		mTransform->mPosition = MyMath::Lerp(mTransform->mPosition, position, kSpeed);
+		mTransform->mPosition = RdMath::Lerp(mTransform->mPosition, position, kSpeed);
 
 		// カメラが埋まらないように
 		Ray ray = Ray(mTarget->mTransform->mPosition + corrPos, mTransform->mPosition + b * mLeeway);// 少し長め

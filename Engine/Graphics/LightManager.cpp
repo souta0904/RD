@@ -28,8 +28,8 @@ void LightManager::Initialize()
 		mSpotLights[i].mPosition = Vector3(0.0f, 5.0f, 0.0f);
 		mSpotLights[i].mRadius = 10.0f;
 		mSpotLights[i].mDecay = 1.0f;
-		mSpotLights[i].mInner = cosf(MyMath::ToRadians(20.0f));
-		mSpotLights[i].mOuter = cosf(MyMath::ToRadians(30.0f));
+		mSpotLights[i].mInner = cosf(RdMath::ToRadians(20.0f));
+		mSpotLights[i].mOuter = cosf(RdMath::ToRadians(30.0f));
 	}
 	for (uint32_t i = 0; i < kCircleShadowCount; ++i)
 	{
@@ -38,8 +38,8 @@ void LightManager::Initialize()
 		mCircleShadows[i].mPosition = Vector3(0.0f, 5.0f, 0.0f);
 		mCircleShadows[i].mRadius = 10.0f;
 		mCircleShadows[i].mDecay = 1.0f;
-		mCircleShadows[i].mInner = cosf(MyMath::ToRadians(20.0f));
-		mCircleShadows[i].mOuter = cosf(MyMath::ToRadians(30.0f));
+		mCircleShadows[i].mInner = cosf(RdMath::ToRadians(20.0f));
+		mCircleShadows[i].mOuter = cosf(RdMath::ToRadians(30.0f));
 	}
 
 	mCBuff = std::make_unique<ConstantBuffer>();
@@ -67,8 +67,8 @@ void LightManager::Update()
 		data->mSpotLights[i] = mSpotLights[i];
 		data->mSpotLights[i].mDirection.Normalize();
 		// Cos
-		data->mSpotLights[i].mInner = cosf(MyMath::ToRadians(mSpotLights[i].mInner));
-		data->mSpotLights[i].mOuter = cosf(MyMath::ToRadians(mSpotLights[i].mOuter));
+		data->mSpotLights[i].mInner = cosf(RdMath::ToRadians(mSpotLights[i].mInner));
+		data->mSpotLights[i].mOuter = cosf(RdMath::ToRadians(mSpotLights[i].mOuter));
 	}
 	// Circle Shadow
 	for (uint32_t i = 0; i < kCircleShadowCount; ++i)
@@ -76,8 +76,8 @@ void LightManager::Update()
 		data->mCircleShadows[i] = mCircleShadows[i];
 		data->mCircleShadows[i].mDirection.Normalize();
 		// Cos
-		data->mCircleShadows[i].mInner = cosf(MyMath::ToRadians(mCircleShadows[i].mInner));
-		data->mCircleShadows[i].mOuter = cosf(MyMath::ToRadians(mCircleShadows[i].mOuter));
+		data->mCircleShadows[i].mInner = cosf(RdMath::ToRadians(mCircleShadows[i].mInner));
+		data->mCircleShadows[i].mOuter = cosf(RdMath::ToRadians(mCircleShadows[i].mOuter));
 	}
 }
 

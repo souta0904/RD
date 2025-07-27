@@ -56,11 +56,19 @@ void Engine::Initialize(uint32_t width, uint32_t height, const std::string& appN
 	{
 		Helper::Log("Failed to Window::Initialize().\n");
 	}
+	else
+	{
+		Helper::Log("Window::Initialize() succeeded.\n");
+	}
 
 	gDirectXCore = std::make_shared<DirectXCore>();
 	if (!gDirectXCore->Initialize(mWindow.get()))
 	{
 		Helper::Log("Failed to DirectXCore::Initialize().\n");
+	}
+	else
+	{
+		Helper::Log("DirectXCore::Initialize() succeeded.\n");
 	}
 
 	// TODO: 成功チェック
@@ -154,7 +162,7 @@ void Engine::Input()
 
 	mInput->Update();
 
-	const InputSystem::State& inputState = mInput->GetState();
+	const InputState& inputState = mInput->GetState();
 	Editor::Input(inputState);
 	if (Editor::IsGamePlaying())
 	{

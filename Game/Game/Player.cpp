@@ -19,7 +19,7 @@ Player::Player(Scene* scene)
 	, mVelocity(Vector3::kZero)
 	, mSpeed(10.0f)
 	, mRotVel(0.0f)
-	, mRotSpeed(MyMath::kPiOver2)
+	, mRotSpeed(RdMath::kPiOver2)
 	, mIsGround(false)
 	, mJumpPower(0.0f)
 	, mGravity(0.0f)
@@ -73,14 +73,14 @@ void Player::Initialize()
 	}
 }
 
-void Player::ActorInput(const InputSystem::State& input)
+void Player::ActorInput(const InputState& input)
 {
 	// ==================================================
 	// 移動
 	// ==================================================
 
 	// スティック
-	Vector2 move = input.mGamepad.GetLStick();
+	Vector2 move = input.mGamepad.GetLeftStick();
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_W))
 	{
@@ -107,7 +107,7 @@ void Player::ActorInput(const InputSystem::State& input)
 	// ==================================================
 
 	// スティック
-	mRotVel = input.mGamepad.GetRStick().x;
+	mRotVel = input.mGamepad.GetRightStick().x;
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_LEFT))
 	{
@@ -118,7 +118,7 @@ void Player::ActorInput(const InputSystem::State& input)
 		mRotVel += 1.0f;
 	}
 
-	mRotVel = MyMath::Clamp(mRotVel, -1.0f, 1.0f);
+	mRotVel = RdMath::Clamp(mRotVel, -1.0f, 1.0f);
 
 	// ==================================================
 	// ジャンプ
@@ -216,7 +216,7 @@ void Player::ActorUpdate(float deltaTime)
 		}
 	}
 
-	mInvincibleTimer = MyMath::Max(0.0f, mInvincibleTimer - deltaTime);
+	mInvincibleTimer = RdMath::Max(0.0f, mInvincibleTimer - deltaTime);
 	if (mDamage)
 	{
 		if (mInvincibleTimer > 0.0f)
@@ -255,7 +255,7 @@ void Player::ActorOnCollisionStay(Actor* /*other*/, CollisionInfo* info)
 {
 	//Console::Log("Hit!");
 
-	float maxCos = cosf(MyMath::ToRadians(mMaxGround));
+	float maxCos = cosf(RdMath::ToRadians(mMaxGround));
 	//Console::Log(std::format("{}\n", MyMath::ToDegrees(acosf(info->mNormal.y))));
 	Vector3 pushBack = info->mNormal;
 	if (info->mNormal.y >= maxCos)

@@ -25,7 +25,7 @@ public:
 	void Normalize()
 	{
 		float a = x * x + y * y;
-		if (a > MyMath::kEpsilon)
+		if (a > RdMath::kEpsilon)
 		{
 			float oneOverA = 1.0f / sqrt(a);
 			x *= oneOverA;

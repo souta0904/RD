@@ -18,7 +18,7 @@ Vector3 UpdateKeyframeAtTime(
 			key[next].mTime >= time)
 		{
 			float t = (time - key[curr].mTime) / (key[next].mTime - key[curr].mTime);
-			return MyMath::Lerp(key[curr].mValue, key[next].mValue, t);
+			return RdMath::Lerp(key[curr].mValue, key[next].mValue, t);
 		}
 	}
 	return (*key.rbegin()).mValue;

@@ -92,8 +92,8 @@ public:
 				break;
 			case Shape::Sphere:
 				float radius = Random::Rand(0.0f, mSphereRadius);
-				float theta = Random::Rand(0.0f, MyMath::kPi);
-				float phi = Random::Rand(0.0f, MyMath::k2Pi);
+				float theta = Random::Rand(0.0f, RdMath::kPi);
+				float phi = Random::Rand(0.0f, RdMath::k2Pi);
 				p.mPosition = mPosition + Vector3(
 					radius * sinf(theta) * cosf(phi),
 					radius * sinf(theta) * sinf(phi),
@@ -115,35 +115,35 @@ public:
 
 	void Clamp()
 	{
-		mInitLife.mMin = MyMath::Min(mInitLife.mMin, mInitLife.mMax);
+		mInitLife.mMin = RdMath::Min(mInitLife.mMin, mInitLife.mMax);
 		mInitVel.mMin = Vector3(
-			MyMath::Min(mInitVel.mMin.x, mInitVel.mMax.x),
-			MyMath::Min(mInitVel.mMin.y, mInitVel.mMax.y),
-			MyMath::Min(mInitVel.mMin.z, mInitVel.mMax.z));
+			RdMath::Min(mInitVel.mMin.x, mInitVel.mMax.x),
+			RdMath::Min(mInitVel.mMin.y, mInitVel.mMax.y),
+			RdMath::Min(mInitVel.mMin.z, mInitVel.mMax.z));
 		mInitAccel.mMin = Vector3(
-			MyMath::Min(mInitAccel.mMin.x, mInitAccel.mMax.x),
-			MyMath::Min(mInitAccel.mMin.y, mInitAccel.mMax.y),
-			MyMath::Min(mInitAccel.mMin.z, mInitAccel.mMax.z));
-		mInitSScale.mMin = MyMath::Min(mInitSScale.mMin, mInitSScale.mMax);
-		mInitEScale.mMin = MyMath::Min(mInitEScale.mMin, mInitEScale.mMax);
+			RdMath::Min(mInitAccel.mMin.x, mInitAccel.mMax.x),
+			RdMath::Min(mInitAccel.mMin.y, mInitAccel.mMax.y),
+			RdMath::Min(mInitAccel.mMin.z, mInitAccel.mMax.z));
+		mInitSScale.mMin = RdMath::Min(mInitSScale.mMin, mInitSScale.mMax);
+		mInitEScale.mMin = RdMath::Min(mInitEScale.mMin, mInitEScale.mMax);
 		mInitSRot.mMin = Vector3(
-			MyMath::Min(mInitSRot.mMin.x, mInitSRot.mMax.x),
-			MyMath::Min(mInitSRot.mMin.y, mInitSRot.mMax.y),
-			MyMath::Min(mInitSRot.mMin.z, mInitSRot.mMax.z));
+			RdMath::Min(mInitSRot.mMin.x, mInitSRot.mMax.x),
+			RdMath::Min(mInitSRot.mMin.y, mInitSRot.mMax.y),
+			RdMath::Min(mInitSRot.mMin.z, mInitSRot.mMax.z));
 		mInitERot.mMin = Vector3(
-			MyMath::Min(mInitERot.mMin.x, mInitERot.mMax.x),
-			MyMath::Min(mInitERot.mMin.y, mInitERot.mMax.y),
-			MyMath::Min(mInitERot.mMin.z, mInitERot.mMax.z));
+			RdMath::Min(mInitERot.mMin.x, mInitERot.mMax.x),
+			RdMath::Min(mInitERot.mMin.y, mInitERot.mMax.y),
+			RdMath::Min(mInitERot.mMin.z, mInitERot.mMax.z));
 		mInitSColor.mMin = Color(
-			MyMath::Min(mInitSColor.mMin.r, mInitSColor.mMax.r),
-			MyMath::Min(mInitSColor.mMin.g, mInitSColor.mMax.g),
-			MyMath::Min(mInitSColor.mMin.b, mInitSColor.mMax.b),
-			MyMath::Min(mInitSColor.mMin.a, mInitSColor.mMax.a));
+			RdMath::Min(mInitSColor.mMin.r, mInitSColor.mMax.r),
+			RdMath::Min(mInitSColor.mMin.g, mInitSColor.mMax.g),
+			RdMath::Min(mInitSColor.mMin.b, mInitSColor.mMax.b),
+			RdMath::Min(mInitSColor.mMin.a, mInitSColor.mMax.a));
 		mInitEColor.mMin = Color(
-			MyMath::Min(mInitEColor.mMin.r, mInitEColor.mMax.r),
-			MyMath::Min(mInitEColor.mMin.g, mInitEColor.mMax.g),
-			MyMath::Min(mInitEColor.mMin.b, mInitEColor.mMax.b),
-			MyMath::Min(mInitEColor.mMin.a, mInitEColor.mMax.a));
+			RdMath::Min(mInitEColor.mMin.r, mInitEColor.mMax.r),
+			RdMath::Min(mInitEColor.mMin.g, mInitEColor.mMax.g),
+			RdMath::Min(mInitEColor.mMin.b, mInitEColor.mMax.b),
+			RdMath::Min(mInitEColor.mMin.a, mInitEColor.mMax.a));
 	}
 
 	// リセット

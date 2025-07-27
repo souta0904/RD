@@ -74,7 +74,7 @@ Actor::~Actor()
 	}
 }
 
-void Actor::ProcessInput(const InputSystem::State& input)
+void Actor::ProcessInput(const InputState& input)
 {
 	if (mState == State::kAlive)
 	{

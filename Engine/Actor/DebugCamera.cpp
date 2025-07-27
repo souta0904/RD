@@ -13,11 +13,11 @@ DebugCamera::DebugCamera()
 
 }
 
-void DebugCamera::Input(const InputSystem::State& input)
+void DebugCamera::Input(const InputState& input)
 {
 	mRotVel = Vector3::kZero;
 	mVelocity = Vector3::kZero;
-	Vector3 move = input.mMouse.GetMove();
+	Vector2 move = input.mMouse.GetMovement();
 	// 回転
 	if (input.mMouse.GetButton(1))// 右クリック
 	{
@@ -31,14 +31,14 @@ void DebugCamera::Input(const InputSystem::State& input)
 		mVelocity = Vector3(-move.x * kSpeed, move.y * kSpeed, 0.0f);
 	}
 	// ズームイン、ズームアウト
-	mRotVel.z = move.z * kZoomSpeed;
+	mRotVel.z = input.mMouse.GetWheel() * kZoomSpeed;
 }
 
 void DebugCamera::Update(float /*deltaTime*/)
 {
 	Quaternion rotation = mCamera->GetRotation();
 	mDistance += -mRotVel.z;
-	mDistance = MyMath::Clamp(mDistance, kMinDist, kMaxDist);
+	mDistance = RdMath::Clamp(mDistance, kMinDist, kMaxDist);
 
 	// 回転
 	Vector3 offset = Vector3(0.0f, 0.0f, -mDistance) * rotation;

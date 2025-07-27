@@ -49,7 +49,7 @@ public:
 	Component(Actor* owner, uint32_t order = 100);
 	virtual ~Component();
 
-	virtual void ProcessInput(const InputSystem::State&) {}
+	virtual void ProcessInput(const InputState&) {}
 	virtual void Update(float) {}
 	virtual void OnUpdateWorld() {}
 	// Collision

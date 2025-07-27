@@ -39,7 +39,7 @@ void Scene::Terminate()
 	Unload();
 }
 
-void Scene::ProcessInput(const InputSystem::State& input)
+void Scene::ProcessInput(const InputState& input)
 {
 	// アクターの入力処理
 	mIsUpdating = true;

@@ -20,7 +20,7 @@ DemoPlayer::DemoPlayer(Scene* scene)
 	, mVelocity(Vector3::kZero)
 	, mSpeed(10.0f)
 	, mRotVel(0.0f)
-	, mRotSpeed(MyMath::kPiOver2)
+	, mRotSpeed(RdMath::kPiOver2)
 	, mIsGround(false)
 	, mJumpPower(0.0f)
 	, mGravity(0.0f)
@@ -45,14 +45,14 @@ DemoPlayer::DemoPlayer(Scene* scene)
 	mSandSmoke = new ParticleRenderer(sandSmoker);// パーティクル
 }
 
-void DemoPlayer::ActorInput(const InputSystem::State& input)
+void DemoPlayer::ActorInput(const InputState& input)
 {
 	// ==================================================
 	// 移動
 	// ==================================================
 
 	// スティック
-	Vector2 move = input.mGamepad.GetLStick();
+	Vector2 move = input.mGamepad.GetLeftStick();
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_W))
 	{
@@ -79,7 +79,7 @@ void DemoPlayer::ActorInput(const InputSystem::State& input)
 	// ==================================================
 
 	// スティック
-	mRotVel = input.mGamepad.GetRStick().x;
+	mRotVel = input.mGamepad.GetRightStick().x;
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_LEFT))
 	{
@@ -90,7 +90,7 @@ void DemoPlayer::ActorInput(const InputSystem::State& input)
 		mRotVel += 1.0f;
 	}
 
-	mRotVel = MyMath::Clamp(mRotVel, -1.0f, 1.0f);
+	mRotVel = RdMath::Clamp(mRotVel, -1.0f, 1.0f);
 
 	// ==================================================
 	// ジャンプ
@@ -109,7 +109,7 @@ void DemoPlayer::ActorInput(const InputSystem::State& input)
 	// ==================================================
 	// 弾
 	// ==================================================
-	if (input.mGamepad.GetRTrigger() > 0.0f ||
+	if (input.mGamepad.GetRightTrigger() > 0.0f ||
 		input.mKeyboard.GetKey(DIK_LSHIFT))
 	{
 		if (mCooldown <= 0.0f)
@@ -124,7 +124,7 @@ void DemoPlayer::ActorInput(const InputSystem::State& input)
 
 void DemoPlayer::ActorUpdate(float deltaTime)
 {
-	mCooldown = MyMath::Max(0.0f, mCooldown - deltaTime);
+	mCooldown = RdMath::Max(0.0f, mCooldown - deltaTime);
 
 	// ==================================================
 	// 回転
@@ -219,7 +219,7 @@ void DemoPlayer::ActorOnCollisionStay(Actor* /*other*/, CollisionInfo* info)
 		mVelocity = Vector3::kZero;
 	}*/
 
-	float maxCos = cosf(MyMath::ToRadians(mMaxGround));
+	float maxCos = cosf(RdMath::ToRadians(mMaxGround));
 	//Console::Log(std::format("{}\n", MyMath::ToDegrees(acosf(info->mNormal.y))));
 	Vector3 pushBack = info->mNormal;
 	if (info->mNormal.y >= maxCos)

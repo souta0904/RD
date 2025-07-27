@@ -18,7 +18,7 @@ MeteoriteEmitter::MeteoriteEmitter(Scene* scene)
 
 void MeteoriteEmitter::ActorUpdate(float deltaTime)
 {
-	mFrequency = MyMath::Max(mFrequency - deltaTime, 0.0f);
+	mFrequency = RdMath::Max(mFrequency - deltaTime, 0.0f);
 	if (mFrequency <= 0.0f)
 	{
 		Emit();

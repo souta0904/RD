@@ -82,14 +82,14 @@ void Transform::UpdateForDev()
 		ImGui::DragFloat3("Scale", &mScale.x, 0.01f);
 		// Rotation
 		auto rotation = ToEuler(mRotation);
-		rotation.x = MyMath::ToDegrees(rotation.x);
-		rotation.y = MyMath::ToDegrees(rotation.y);
-		rotation.z = MyMath::ToDegrees(rotation.z);
+		rotation.x = RdMath::ToDegrees(rotation.x);
+		rotation.y = RdMath::ToDegrees(rotation.y);
+		rotation.z = RdMath::ToDegrees(rotation.z);
 		if (ImGui::DragFloat3("Rotation", &rotation.x, 0.5f))
 		{
-			rotation.x = MyMath::ToRadians(rotation.x);
-			rotation.y = MyMath::ToRadians(rotation.y);
-			rotation.z = MyMath::ToRadians(rotation.z);
+			rotation.x = RdMath::ToRadians(rotation.x);
+			rotation.y = RdMath::ToRadians(rotation.y);
+			rotation.z = RdMath::ToRadians(rotation.z);
 			mRotation = ToQuaternion(rotation);
 		}
 		// Position

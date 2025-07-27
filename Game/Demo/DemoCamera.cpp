@@ -10,18 +10,18 @@ DemoCamera::DemoCamera(Scene* scene)
 	: Actor(scene)
 	, mTarget(nullptr)
 	, mDistance(10.0f)
-	, mRot(MyMath::kPiOver2 * 0.2f)
+	, mRot(RdMath::kPiOver2 * 0.2f)
 	, mRotVel(0.0f)
-	, mRotSpeed(MyMath::kPiOver2)
+	, mRotSpeed(RdMath::kPiOver2)
 	, mLeeway(1.5f)
 {
 	new CameraComponent(this);
 }
 
-void DemoCamera::ActorInput(const InputSystem::State& input)
+void DemoCamera::ActorInput(const InputState& input)
 {
 	// スティック
-	mRotVel = -input.mGamepad.GetRStick().y;
+	mRotVel = -input.mGamepad.GetRightStick().y;
 	// キーボード
 	if (input.mKeyboard.GetKey(DIK_UP))
 	{
@@ -42,7 +42,7 @@ void DemoCamera::ActorUpdate(float deltaTime)
 	if (mTarget)
 	{
 		mRot += mRotVel * mRotSpeed * deltaTime;
-		mRot = MyMath::Clamp(mRot, kRotMin, kRotMax);
+		mRot = RdMath::Clamp(mRot, kRotMin, kRotMax);
 
 		Quaternion rotation = mTarget->mTransform->mRotation;
 		Vector3 b = Vector3(0.0f, 0.0f, -1.0f) * rotation;

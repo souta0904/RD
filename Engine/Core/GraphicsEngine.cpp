@@ -9,41 +9,81 @@ std::shared_ptr<DirectXCore> gDirectXCore = nullptr;
 // 初期化
 bool DirectXCore::Initialize(Window* window)
 {
+	// デバイス
 	if (!CreateDevice())
 	{
 		Helper::Log("Failed to CreateDevice().\n");
 		return false;
 	}
+	else
+	{
+		Helper::Log("CreateDevice() succeeded.\n");
+	}
 
 	DirectXCommonSettings::Initialize();
 
+	// コマンドキュー
 	if (!CreateCmdQueue())
 	{
 		Helper::Log("Failed to CreateCmdQueue().\n");
 	}
+	else
+	{
+		Helper::Log("CreateCmdQueue() succeeded.\n");
+	}
+	// スワップチェイン
 	if (!CreateSwapChain(window))
 	{
 		Helper::Log("Failed to CreateSwapChain().\n");
 	}
+	else
+	{
+		Helper::Log("CreateSwapChain() succeeded.\n");
+	}
+	// コマンドリスト
 	if (!CreateCmdList())
 	{
 		Helper::Log("Failed to CreateCmdList().\n");
 	}
+	else
+	{
+		Helper::Log("CreateCmdList() succeeded.\n");
+	}
+	// デスクリプタヒープ
 	if (!CreateDescHeaps())
 	{
 		Helper::Log("Failed to CreateDescHeaps().\n");
 	}
+	else
+	{
+		Helper::Log("CreateDescHeaps() succeeded.\n");
+	}
+	// レンダーターゲットビュー
 	if (!CreateRTV())
 	{
 		Helper::Log("Failed to CreateRTV().\n");
 	}
+	else
+	{
+		Helper::Log("CreateRTV() succeeded.\n");
+	}
+	// 深度ステンシルビュー
 	if (!CreateDSV(window))
 	{
 		Helper::Log("Failed to CreateDSV().\n");
 	}
+	else
+	{
+		Helper::Log("CreateDSV() succeeded.\n");
+	}
+	// フェンス
 	if (!CreateFence())
 	{
 		Helper::Log("Failed to CreateFence().\n");
+	}
+	else
+	{
+		Helper::Log("CreateFence() succeeded.\n");
 	}
 
 	mViewport.TopLeftX = 0.0f;
@@ -58,9 +98,14 @@ bool DirectXCore::Initialize(Window* window)
 	mScissor.right = window->GetWidth();
 	mScissor.bottom = window->GetHeight();
 
+	// DXC
 	if (!InitDXC())
 	{
 		Helper::Log("Failed to InitDXC().\n");
+	}
+	else
+	{
+		Helper::Log("InitDXC() succeeded.\n");
 	}
 
 	return true;

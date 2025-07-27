@@ -12,7 +12,7 @@ public:
 	void Terminate();
 
 	void TransitionScene();// 更新前
-	void Input(const InputSystem::State& input);
+	void Input(const InputState& input);
 	void UpdateForGame(float deltaTime);
 	void UpdateForEditor();
 	//void UpdateWorldMat();

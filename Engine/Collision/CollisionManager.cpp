@@ -126,7 +126,7 @@ void CollisionManager::TestAllCollider()
 bool CollisionManager::Raycast(const Ray& ray, RaycastInfo& info, CollisionAttr attr)
 {
 	bool isHit = false;
-	float minT = MyMath::kInfinity;
+	float minT = RdMath::kInfinity;
 	for (auto& c : mColliders)
 	{
 		if (!(c->mAttribute & attr) ||

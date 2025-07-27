@@ -75,7 +75,7 @@ void GravityBody::Update(float deltaTime)
 		else
 		{
 			const float kNormSpeed = 0.2f;
-			mCurrNormal = MyMath::Lerp<Vector3>(mCurrNormal, mNormal, kNormSpeed);
+			mCurrNormal = RdMath::Lerp<Vector3>(mCurrNormal, mNormal, kNormSpeed);
 			mCurrNormal.Normalize();
 		}
 

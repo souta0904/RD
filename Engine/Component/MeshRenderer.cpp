@@ -162,7 +162,7 @@ void MeshRenderer::UpdateModel()
 			}
 			// Specular
 			float spec = mMatForDev->GetSpecular();
-			if (ImGui::DragFloat("Specular", &spec, 0.1f, 0.0f, MyMath::kInfinity))
+			if (ImGui::DragFloat("Specular", &spec, 0.1f, 0.0f, RdMath::kInfinity))
 			{
 				mMatForDev->SetSpecular(spec);
 			}

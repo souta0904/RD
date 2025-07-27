@@ -2,7 +2,7 @@
 #include <limits>
 #include <numbers>
 
-namespace MyMath
+namespace RdMath
 {
 	const float kPi = std::numbers::pi_v<float>;// π
 	const float k2Pi = kPi * 2.0f;// 2π

@@ -142,7 +142,7 @@ namespace Editor
 	}
 
 
-	void Input(const InputSystem::State& input)
+	void Input(const InputState& input)
 	{
 		if (!gIsGame && mIsDebugCamera)
 		{

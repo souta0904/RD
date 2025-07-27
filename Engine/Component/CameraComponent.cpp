@@ -89,10 +89,10 @@ void CameraComponent::UpdateForDev()
 		}
 		// Fov
 		float fov = mCamera->GetFov();
-		fov = MyMath::ToDegrees(fov);
+		fov = RdMath::ToDegrees(fov);
 		if (ImGui::SliderFloat("Fov", &fov, 1.0f, 180.0f))
 		{
-			fov = MyMath::ToRadians(fov);
+			fov = RdMath::ToRadians(fov);
 			mCamera->SetFov(fov);
 		}
 		// Near Z, Far Z

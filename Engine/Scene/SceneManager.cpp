@@ -37,7 +37,7 @@ void SceneManager::TransitionScene()
 	}
 }
 
-void SceneManager::Input(const InputSystem::State& input)
+void SceneManager::Input(const InputState& input)
 {
 	if (mCurrScene)
 	{

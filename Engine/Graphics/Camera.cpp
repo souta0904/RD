@@ -5,7 +5,7 @@
 Camera::Camera()
 	: mRotation(Quaternion::kIdentity)
 	, mPosition(Vector3::kZero)
-	, mFov(MyMath::kPiOver2)
+	, mFov(RdMath::kPiOver2)
 	, mNearZ(0.1f)
 	, mFarZ(10000.0f)
 	, mView(Matrix4::kIdentity)

@@ -211,7 +211,7 @@ Vector3 Closest(const Vector3& a, const TLine& b, float* outT = nullptr)
 	Vector3 ab = b.mEnd - b.mStart;
 	Vector3 ac = a - b.mStart;
 	float t = Dot(ac, ab) / Dot(ab, ab);
-	t = MyMath::Clamp(t, TLine::kMinT, TLine::kMaxT);
+	t = RdMath::Clamp(t, TLine::kMinT, TLine::kMaxT);
 	if (outT)
 	{
 		*outT = t;
@@ -267,7 +267,7 @@ template <class TLine>
 bool Intersect(const TLine& a, const Plane& b, float& outT)
 {
 	float d = Dot(b.mNormal, a.mEnd - a.mStart);
-	if (fabs(d) < MyMath::kEpsilon)
+	if (fabs(d) < RdMath::kEpsilon)
 	{
 		return false;
 	}
@@ -335,15 +335,15 @@ bool Intersect(const TLine& a, const AABB& b, float& outT, Vector3& normal)
 	maxes.y = (-a.mStart.y + b.mMax.y) / v.y;
 	maxes.z = (-a.mStart.z + b.mMax.z) / v.z;
 	Vector3 nears;
-	nears.x = MyMath::Min(mins.x, maxes.x);
-	nears.y = MyMath::Min(mins.y, maxes.y);
-	nears.z = MyMath::Min(mins.z, maxes.z);
+	nears.x = RdMath::Min(mins.x, maxes.x);
+	nears.y = RdMath::Min(mins.y, maxes.y);
+	nears.z = RdMath::Min(mins.z, maxes.z);
 	Vector3 fars;
-	fars.x = MyMath::Max(mins.x, maxes.x);
-	fars.y = MyMath::Max(mins.y, maxes.y);
-	fars.z = MyMath::Max(mins.z, maxes.z);
-	float min = MyMath::Max(MyMath::Max(nears.x, nears.y), nears.z);
-	float max = MyMath::Min(MyMath::Min(fars.x, fars.y), fars.z);
+	fars.x = RdMath::Max(mins.x, maxes.x);
+	fars.y = RdMath::Max(mins.y, maxes.y);
+	fars.z = RdMath::Max(mins.z, maxes.z);
+	float min = RdMath::Max(RdMath::Max(nears.x, nears.y), nears.z);
+	float max = RdMath::Min(RdMath::Min(fars.x, fars.y), fars.z);
 	if (min <= max)
 	{
 		if (min * max < 0.0f)
@@ -361,9 +361,9 @@ bool Intersect(const TLine& a, const AABB& b, float& outT, Vector3& normal)
 			Vector3 size = (b.mMax - b.mMin) * 0.5f;
 			Vector3 direction = p - center;
 			normal = Vector3(
-				(fabsf(direction.x) >= size.x - MyMath::kEpsilon) ? MyMath::Sign(direction.x) : 0.0f,
-				(fabsf(direction.y) >= size.y - MyMath::kEpsilon) ? MyMath::Sign(direction.y) : 0.0f,
-				(fabsf(direction.z) >= size.z - MyMath::kEpsilon) ? MyMath::Sign(direction.z) : 0.0f);
+				(fabsf(direction.x) >= size.x - RdMath::kEpsilon) ? RdMath::Sign(direction.x) : 0.0f,
+				(fabsf(direction.y) >= size.y - RdMath::kEpsilon) ? RdMath::Sign(direction.y) : 0.0f,
+				(fabsf(direction.z) >= size.z - RdMath::kEpsilon) ? RdMath::Sign(direction.z) : 0.0f);
 			normal.Normalize();
 			return true;
 		}

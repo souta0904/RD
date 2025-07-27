@@ -31,7 +31,7 @@ bool MeshCollider::Raycast(const Ray& ray, float& outT, Vector3& normal)
 {
 	Ray localRay = Ray(ray.mStart * mInverseWorld, ray.mEnd * mInverseWorld);
 	bool isHit = false;
-	float minT = MyMath::kInfinity;
+	float minT = RdMath::kInfinity;
 	Triangle* hitTri = nullptr;
 	auto it = mTriangles.begin();
 	for (; it != mTriangles.end(); ++it)

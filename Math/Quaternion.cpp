@@ -32,7 +32,7 @@ Quaternion::Quaternion(const Vector3& axis, float theta)
 void Quaternion::Normalize()
 {
 	float a = w * w + x * x + y * y + z * z;
-	if (a > MyMath::kEpsilon)
+	if (a > RdMath::kEpsilon)
 	{
 		float oneOverA = 1.0f / sqrt(a);
 		w *= oneOverA;
@@ -94,10 +94,10 @@ float Dot(const Quaternion& q1, const Quaternion& q2)
 Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float t)
 {
 	Quaternion result;
-	result.w = MyMath::Lerp(q1.w, q2.w, t);
-	result.x = MyMath::Lerp(q1.x, q2.x, t);
-	result.y = MyMath::Lerp(q1.y, q2.y, t);
-	result.z = MyMath::Lerp(q1.z, q2.z, t);
+	result.w = RdMath::Lerp(q1.w, q2.w, t);
+	result.x = RdMath::Lerp(q1.x, q2.x, t);
+	result.y = RdMath::Lerp(q1.y, q2.y, t);
+	result.z = RdMath::Lerp(q1.z, q2.z, t);
 	result.Normalize();
 	return result;
 }
@@ -189,7 +189,7 @@ Vector3 ToEuler(const Quaternion& q)
 	float sy = 2.0f * (q.w * q.y - q.z * q.x);
 	if (fabsf(sy) >= 1.0f)
 	{
-		euler.y = MyMath::kPiOver2;
+		euler.y = RdMath::kPiOver2;
 		if (sy < 0.0f)
 		{
 			euler.y = -euler.y;

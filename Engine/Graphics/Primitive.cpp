@@ -379,7 +379,7 @@ void Primitive::DrawCircle(
 	std::vector<Vector3> p(kDiv);
 	for (uint32_t i = 0; i < kDiv; ++i)
 	{
-		float r = MyMath::k2Pi / kDiv * i;
+		float r = RdMath::k2Pi / kDiv * i;
 		p[i] = Vector3(
 			pos.x + cosf(r) * rad,
 			pos.y + sinf(r) * rad,
@@ -416,7 +416,7 @@ void Primitive::DrawSphere(
 	std::vector<Vector3> p(kDiv * 3);
 	for (uint32_t i = 0; i < kDiv; ++i)
 	{
-		float r = MyMath::k2Pi / kDiv * i;
+		float r = RdMath::k2Pi / kDiv * i;
 		float c = cosf(r) * rad;
 		float s = sinf(r) * rad;
 		p[kDiv * 0 + i] = pos + Vector3(c, s, 0.0f);

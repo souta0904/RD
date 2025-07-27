@@ -15,7 +15,7 @@ public:
 	void Initialize();
 	void Terminate();
 
-	void ProcessInput(const InputSystem::State& input);
+	void ProcessInput(const InputState& input);
 	void Update(float deltaTime);
 	void UpdateWorld();
 	void TestCollision();

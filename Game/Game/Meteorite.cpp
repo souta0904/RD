@@ -30,8 +30,8 @@ Meteorite::Meteorite(Scene* scene)
 	mTransform->mScale *= 3.0f;
 
 	mRandRot = Random::Rand(
-		Vector3(-MyMath::k2Pi, -MyMath::k2Pi, -MyMath::k2Pi),
-		Vector3(MyMath::k2Pi, MyMath::k2Pi, MyMath::k2Pi)) * 0.5f;
+		Vector3(-RdMath::k2Pi, -RdMath::k2Pi, -RdMath::k2Pi),
+		Vector3(RdMath::k2Pi, RdMath::k2Pi, RdMath::k2Pi)) * 0.5f;
 }
 
 void Meteorite::ActorUpdate(float deltaTime)
@@ -70,8 +70,8 @@ void Meteorite::ActorOnCollisionEnter(Actor* owner, CollisionInfo*)
 			auto chip = new MeteoriteChip(mScene);
 			chip->mTransform->mPosition = mTransform->mPosition;
 			auto r = Random::Rand(
-				Vector3(-MyMath::k2Pi, -MyMath::k2Pi, -MyMath::k2Pi),
-				Vector3(MyMath::k2Pi, MyMath::k2Pi, MyMath::k2Pi)) * 0.5f;
+				Vector3(-RdMath::k2Pi, -RdMath::k2Pi, -RdMath::k2Pi),
+				Vector3(RdMath::k2Pi, RdMath::k2Pi, RdMath::k2Pi)) * 0.5f;
 			chip->mTransform->mRotation = ToQuaternion(
 				Matrix4::CreateRotateX(r.x) *
 				Matrix4::CreateRotateY(r.y) *

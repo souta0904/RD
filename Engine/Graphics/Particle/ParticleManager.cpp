@@ -28,9 +28,9 @@ void ParticleManager::Update(float deltaTime)
 		it->mVel += it->mAccel;
 		it->mPosition += it->mVel * deltaTime;
 		float t = it->mCurrTime / it->mLife;
-		it->mScale = MyMath::Lerp<float>(it->mSScale, it->mEScale, t);
-		it->mRot = MyMath::Lerp<Vector3>(it->mSRot, it->mERot, t);
-		it->mColor = MyMath::Lerp<Color>(it->mSColor, it->mEColor, t);
+		it->mScale = RdMath::Lerp<float>(it->mSScale, it->mEScale, t);
+		it->mRot = RdMath::Lerp<Vector3>(it->mSRot, it->mERot, t);
+		it->mColor = RdMath::Lerp<Color>(it->mSColor, it->mEColor, t);
 		if (mCount < kMaxParticle)
 		{
 			data[mCount].mWorld =
