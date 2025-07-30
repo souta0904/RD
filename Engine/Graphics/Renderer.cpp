@@ -36,18 +36,20 @@ void Renderer::Initialize()
 	mPrimitive = std::make_unique<Primitive>();
 	mPrimitive->Initialize(this);
 
+	auto window = gEngine->GetWindow();
 	// メインレンダーターゲット
-	mMainRt = std::make_unique<RenderTarget>();
-	mMainRt->Create();
+	mMainRt = std::make_unique<RenderTexture>();
+	mMainRt->Create(window->GetWidth(), window->GetHeight());
 	// 最終レンダーターゲット
-	mFinalRt = std::make_unique<RenderTarget>();
-	mFinalRt->Create();
+	mFinalRt = std::make_unique<RenderTexture>();
+	mFinalRt->Create(window->GetWidth(), window->GetHeight());
 	mFinalSprite = std::make_unique<Sprite>();
 	mFinalSprite->Create();
 
 	// ガウシアンブラー
 	mGaussianBlur = std::make_unique<GaussianBlur>();
-	mGaussianBlur->Initialize(mMainRt->GetRenderTarget().get(), this);
+	//mGaussianBlur->Initialize(mMainRt->GetRenderTarget().get(), this);
+	mGaussianBlur->Initialize(mMainRt.get(), this);
 
 	// モデル用関数テーブル
 	//mModelFuncs["obj"] = &Renderer::GetModelFromObj;// .obj
@@ -66,7 +68,7 @@ void Renderer::Initialize()
 // シーン描画前
 void Renderer::PreRendering(ID3D12GraphicsCommandList* cmdList)
 {
-	mMainRt->PreRender(cmdList);
+	mMainRt->BeginRender(cmdList);
 }
 
 // シーン描画後
@@ -75,7 +77,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 	//Editor::PostProcess();///
 	//Editor::Draw(cmdList);///
 
-	mMainRt->PostRender();
+	mMainRt->EndRender(cmdList);
 
 	//Editor::PreProcess();
 
@@ -85,7 +87,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 
 	SpriteCommon::PreRendering(cmdList);
 	// ガウシアンブラー
-	Texture* texture = nullptr;
+	RenderTexture* texture = nullptr;
 	if (mIsGaussianBlur)
 	{
 		mGaussianBlur->Execute(cmdList, mGaussianPower);
@@ -93,7 +95,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 	}
 	else
 	{
-		texture = mMainRt->GetRenderTarget().get();
+		texture = mMainRt.get();
 	}
 	SpriteCommon::PostRendering();
 
@@ -138,7 +140,7 @@ void Renderer::PostRendering(ID3D12GraphicsCommandList* cmdList)
 				auto window = gEngine->GetWindow();
 
 				ImGui::Image(
-					ImTextureID(texture->GetDescHandle()->mGPU.ptr),
+					ImTextureID(texture->GetHandleSRV()->mGPU.ptr),
 					ImVec2(size.x, window->GetHeight() * size.x / window->GetWidth()));
 				// モデルのドラッグアンドドロップでメッシュレンダラー付のアクターを作成
 				if (ImGui::BeginDragDropTarget())
@@ -583,7 +585,7 @@ void Renderer::SaveFile(nlohmann::json& json)
 	auto& texs = json["Textures"];
 	for (auto tex : mTextures.GetResources())
 	{
-		texs.push_back(tex.second->GetFilePath());
+		texs.push_back(tex.second->GetPath());
 	}
 
 	auto& models = json["Model"];
@@ -639,8 +641,8 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)t->GetDescHandle()->mGPU.ptr, ImVec2(40.0f, 40.0f));
-			auto texName = Helper::GetFilename(t->GetFilePath());
+			ImGui::Image((void*)(intptr_t)t->GetHandleSRV()->mGPU.ptr, ImVec2(40.0f, 40.0f));
+			auto texName = Helper::GetFilename(t->GetPath());
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
 				ImGui::SetDragDropPayload("TEXTURE_PAYLOAD", &t, sizeof(t));
@@ -680,7 +682,7 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGPU.ptr, size);
+			ImGui::Image((void*)(intptr_t)fileTex->GetHandleSRV()->mGPU.ptr, size);
 			auto modelName = m->GetName();
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{
@@ -728,7 +730,7 @@ void Renderer::UpdateForDev()
 			}
 			// Group
 			ImGui::BeginGroup();
-			ImGui::Image((void*)(intptr_t)fileTex->GetDescHandle()->mGPU.ptr, size);
+			ImGui::Image((void*)(intptr_t)fileTex->GetHandleSRV()->mGPU.ptr, size);
 			auto animName = anim->GetName();
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))// ドラッグ
 			{

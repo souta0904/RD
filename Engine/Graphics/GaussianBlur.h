@@ -13,26 +13,31 @@ class Renderer;
 class GaussianBlur
 {
 public:
-	void Initialize(Texture* texture, Renderer* renderer);
+	void Initialize(RenderTexture* texture, Renderer* renderer);
 	// ブラーを実行
 	void Execute(ID3D12GraphicsCommandList* cmdList, float power = 20.0f);
 
 	// ブラーをかけたテクスチャ
-	Texture* GetTexture()
+	/*Texture* GetTexture()
 	{
 		return mVBlurRt.GetRenderTarget().get();
+	}*/
+
+	RenderTexture* GetTexture()
+	{
+		return &mVBlurRt;
 	}
 
 private:
 	// 元テクスチャ
-	Texture* mTexture;
+	RenderTexture* mTexture;
 	// パイプライン
 	std::unique_ptr<RootSignature> mBlurRs;
 	PipelineState mHBlurPso;// 横ブラー
 	PipelineState mVBlurPso;// 縦ブラー
 
-	RenderTarget mHBlurRt;
-	RenderTarget mVBlurRt;
+	RenderTexture mHBlurRt;
+	RenderTexture mVBlurRt;
 	Sprite mHBlurSprite;
 	Sprite mVBlurSprite;
 

@@ -124,8 +124,8 @@ private:
 	std::unique_ptr<Primitive> mPrimitive;
 
 	// レンダーターゲット
-	std::unique_ptr<RenderTarget> mMainRt;
-	std::unique_ptr<RenderTarget> mFinalRt;
+	std::unique_ptr<RenderTexture> mMainRt;
+	std::unique_ptr<RenderTexture> mFinalRt;
 	std::unique_ptr<Sprite> mFinalSprite;
 	// ガウシアンブラー
 	std::unique_ptr<GaussianBlur> mGaussianBlur;

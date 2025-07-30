@@ -5,7 +5,7 @@
 Material::Material()
 	: mCBuff(nullptr)
 	, mName("None")
-	, mTexturePath(Texture::kTexturePath + "Default.png")
+	, mTexturePath(std::string("Assets/Texture/") + "Default.png")
 	, mTexture(nullptr)
 	, mBaseColor(Color::kWhite)
 	, mSpecular(100.0f)

@@ -1,33 +1,32 @@
 #pragma once
 #include "Color.h"
 #include "core/DescriptorHeap.h"
-#include "Graphics/Texture.h"
-#include "Window.h"
+#include "Texture.h"
 #include <memory>
 
-class RenderTarget
+// 書き込み可テクスチャ
+class RenderTexture : public Texture
 {
-public:
-	RenderTarget();
-	~RenderTarget();
-	void Create(uint32_t width = 1920, uint32_t height = 1080);
-	// レンダリング前後処理
-	void PreRender(ID3D12GraphicsCommandList* cmdList);
-	void PostRender();
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	std::shared_ptr<Texture> GetRenderTarget() const { return mRenderTarget; }
+public:
+	~RenderTexture();
+
+	bool Create(uint32_t width, uint32_t height, bool useDepth = true);
+
+	// 書き込み前後処理
+	// この間のバインドは不可
+	void BeginRender(ComPtr<ID3D12GraphicsCommandList> cmdList);
+	void EndRender(ComPtr<ID3D12GraphicsCommandList> cmdList);
 
 private:
-	ID3D12GraphicsCommandList* mCmdList;
-
-	// レンダーターゲット
-	std::shared_ptr<Texture> mRenderTarget;
-	DescriptorHandle* mRtvHandle;
-	// 深度バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> mDepthBuff;
-	DescriptorHandle* mDsvHandle;
+	bool mUseDepth;// 深度バッファの有無
+	DescriptorHandle* mHandleRTV;
+	ComPtr<ID3D12Resource> mDepthBuff;
+	DescriptorHandle* mHandleDSV;
 
 	D3D12_VIEWPORT mViewport;
 	D3D12_RECT mScissor;
-	Color mClearColor;
+	Color mClearColor = Color::kRed;
 };

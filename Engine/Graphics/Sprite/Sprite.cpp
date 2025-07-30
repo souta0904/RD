@@ -28,6 +28,16 @@ void Sprite::Create(Texture* texture)
 	mCBuff->Create(sizeof(SpriteCommon::Constant));
 }
 
+//void Sprite::Create(RenderTarget* texture)
+//{
+//	// 頂点バッファ
+//	mVBuff = std::make_unique<VertexBuffer>();
+//	mVBuff->Create(sizeof(SpriteCommon::Vertex) * 4, sizeof(SpriteCommon::Vertex));
+//	// 定数バッファ
+//	mCBuff = std::make_unique<ConstantBuffer>();
+//	mCBuff->Create(sizeof(SpriteCommon::Constant));
+//}
+
 void Sprite::Draw(Transform* transform)
 {
 	assert(transform);

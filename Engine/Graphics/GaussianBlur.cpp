@@ -4,7 +4,7 @@
 #include "Sprite/SpriteCommon.h"
 #include "Renderer.h"
 
-void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
+void GaussianBlur::Initialize(RenderTexture* texture, Renderer* renderer)
 {
 	assert(texture);
 	assert(renderer);
@@ -55,7 +55,8 @@ void GaussianBlur::Initialize(Texture* texture, Renderer* renderer)
 	mHBlurRt.Create(window->GetWidth() / 2, window->GetHeight());
 	mHBlurSprite.Create(mTexture);
 	mVBlurRt.Create(window->GetWidth() / 2, window->GetHeight() / 2);
-	mVBlurSprite.Create(mHBlurRt.GetRenderTarget().get());
+	//mVBlurSprite.Create(mHBlurRt.GetRenderTarget().get());
+	mVBlurSprite.Create(&mHBlurRt);
 
 	mCBuff = std::make_unique<ConstantBuffer>();
 	mCBuff->Create(sizeof(mWeights));
@@ -80,7 +81,7 @@ void GaussianBlur::Execute(ID3D12GraphicsCommandList* cmdList, float power)
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	// 横ブラー
 	auto window = gEngine->GetWindow();
-	mHBlurRt.PreRender(cmdList);
+	mHBlurRt.BeginRender(cmdList);
 	D3D12_VIEWPORT viewport;
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
@@ -92,13 +93,13 @@ void GaussianBlur::Execute(ID3D12GraphicsCommandList* cmdList, float power)
 	mHBlurPso.Bind(cmdList);
 	mCBuff->Bind(cmdList, 2);
 	mHBlurSprite.Draw(Vector2(float(window->GetWidth()), float(window->GetHeight())));
-	mHBlurRt.PostRender();
+	mHBlurRt.EndRender(cmdList);
 	// 縦ブラー
-	mVBlurRt.PreRender(cmdList);
+	mVBlurRt.BeginRender(cmdList);
 	viewport.Height = FLOAT(window->GetHeight()) / 2.0f;
 	cmdList->RSSetViewports(1, &viewport);
 	mVBlurPso.Bind(cmdList);
 	mCBuff->Bind(cmdList, 2);
 	mVBlurSprite.Draw(Vector2(float(window->GetWidth()), float(window->GetHeight())));
-	mVBlurRt.PostRender();
+	mVBlurRt.EndRender(cmdList);
 }

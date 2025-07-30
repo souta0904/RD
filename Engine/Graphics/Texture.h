@@ -1,42 +1,32 @@
 #pragma once
-#include "Core/DescriptorHeap.h"
+#include "core/DescriptorHeap.h"
 #include <d3d12.h>
 #include <DirectXTex/DirectXTex.h>
 #include <string>
 #include <wrl.h>
 
+// テクスチャ
 class Texture
 {
-public:
-	Texture();
-	~Texture();
-	bool Create(const std::string& filePath);
-	void CreateFromBuff(Microsoft::WRL::ComPtr<ID3D12Resource> buff);
-	void Bind(ID3D12GraphicsCommandList* cmdList, uint32_t rootParam);
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	// アクセッサ
-	const std::string& GetFilePath() const { return mFilePath; }
-	ID3D12Resource* GetBuff() const { return mBuff.Get(); }
-	DescriptorHandle* GetDescHandle() const { return mDescHandle; }
+public:
+	~Texture();
+
+	bool Create(const std::string& path);
+	void Bind(ComPtr<ID3D12GraphicsCommandList> cmdList, uint32_t rootParamIdx);
+
+	const std::string& GetPath() const { return mPath; }
 	uint32_t GetWidth() const { return mWidth; }
 	uint32_t GetHeight() const { return mHeight; }
+	ComPtr<ID3D12Resource> GetTexBuff() const { return mTexBuff; }
+	DescriptorHandle* GetHandleSRV() const { return mHandleSRV; }
 
-private:
-	// シェーダリソースビューを作成
-	void CreateSrv(DXGI_FORMAT format, uint32_t mipLevels);
-
-public:
-	// テクスチャへのパス
-	static const std::string kTexturePath;
-private:
-	std::string mFilePath;
-
-	//D3D12_RESOURCE_DESC mDesc;
-	Microsoft::WRL::ComPtr<ID3D12Resource> mBuff;
-	// デスクリプタハンドル
-	DescriptorHandle* mDescHandle;
-
-	// テクスチャサイズ
+protected:
+	std::string mPath;
 	uint32_t mWidth;
 	uint32_t mHeight;
+	ComPtr<ID3D12Resource> mTexBuff;
+	DescriptorHandle* mHandleSRV;
 };

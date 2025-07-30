@@ -9,12 +9,14 @@
 
 class Texture;
 class Transform;
+class RenderTexture;
 
 class Sprite
 {
 public:
 	Sprite();
 	void Create(Texture* texture = nullptr);
+	//void Create(RenderTarget* texture = nullptr);
 	void Draw(Transform* transform);
 	void Draw(const Vector2& size);
 

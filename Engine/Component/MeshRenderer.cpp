@@ -69,7 +69,7 @@ void MeshRenderer::Load(const nlohmann::json& json)
 		if (texture)
 		{
 			mMatForDev->SetTexture(texture);
-			mTexturePath = texture->GetFilePath();
+			mTexturePath = texture->GetPath();
 		}
 	}
 }
@@ -85,7 +85,7 @@ void MeshRenderer::Save(nlohmann::json& json)
 	auto texture = mMatForDev->GetTexture();
 	if (texture)
 	{
-		JsonHelper::SetString(json, "Texture", texture->GetFilePath());
+		JsonHelper::SetString(json, "Texture", texture->GetPath());
 	}
 }
 
@@ -187,7 +187,7 @@ void MeshRenderer::UpdateModel()
 				{
 					auto texture = (Texture**)(payload->Data);
 					mMatForDev->SetTexture(*texture);
-					mTexturePath = (*texture)->GetFilePath();
+					mTexturePath = (*texture)->GetPath();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -226,7 +226,7 @@ void MeshRenderer::SetModel(Model* model)
 		if (mats.size() > 0)
 		{
 			mMatForDev = mats.begin()->second;
-			mTexturePath = mMatForDev->GetTexture()->GetFilePath();
+			mTexturePath = mMatForDev->GetTexture()->GetPath();
 		}
 	}
 }
