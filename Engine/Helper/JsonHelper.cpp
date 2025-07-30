@@ -93,9 +93,9 @@ namespace JsonHelper
 			auto val = data.at(name);
 			if (val.is_array() && val.size() == 4)
 			{
-				for (uint32_t i = 0; i < 4; ++i)
+				for (auto& v : val)
 				{
-					if (!val[i].is_number_float())
+					if (!v.is_number_float())
 					{
 						return false;
 					}
@@ -119,9 +119,9 @@ namespace JsonHelper
 			auto val = data.at(name);
 			if (val.is_array() && val.size() == 4)
 			{
-				for (uint32_t i = 0; i < 4; ++i)
+				for (auto& v : val)
 				{
-					if (!val[i].is_number_float())
+					if (!v.is_number_float())
 					{
 						return false;
 					}
@@ -145,9 +145,9 @@ namespace JsonHelper
 			auto val = data.at(name);
 			if (val.is_array() && val.size() == 2)
 			{
-				for (uint32_t i = 0; i < 2; ++i)
+				for (auto& v : val)
 				{
-					if (!val[i].is_number_float())
+					if (!v.is_number_float())
 					{
 						return false;
 					}
@@ -169,9 +169,9 @@ namespace JsonHelper
 			auto val = data.at(name);
 			if (val.is_array() && val.size() == 3)
 			{
-				for (uint32_t i = 0; i < 3; ++i)
+				for (auto& v : val)
 				{
-					if (!val[i].is_number_float())
+					if (!v.is_number_float())
 					{
 						return false;
 					}
@@ -194,9 +194,9 @@ namespace JsonHelper
 			auto val = data.at(name);
 			if (val.is_array() && val.size() == 4)
 			{
-				for (uint32_t i = 0; i < 4; ++i)
+				for (auto& v : val)
 				{
-					if (!val[i].is_number_float())
+					if (!v.is_number_float())
 					{
 						return false;
 					}

@@ -14,7 +14,7 @@ namespace
 }
 
 const std::string Engine::kName = "RD ENGINE";
-const std::string Engine::kVersion = "0.1.0";
+const std::string Engine::kVersion = "0.5.0";
 
 void Engine::Run(uint32_t width, uint32_t height, const std::string& appName)
 {

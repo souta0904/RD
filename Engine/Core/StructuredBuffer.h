@@ -26,8 +26,8 @@ public:
 	void* GetData() const { return mData; }
 
 private:
-	uint32_t mSize;// 要素サイズ
-	uint32_t mNumElement;// 要素数
+	uint32_t mSize;// 要素のサイズ
+	uint32_t mNumElement;// 要素の数
 	ComPtr<ID3D12Resource> mBuff;
 	void* mData;
 	DescriptorHandle* mHandleSRV;// デスクリプタハンドル
